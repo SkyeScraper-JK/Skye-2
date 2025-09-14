@@ -280,12 +280,7 @@ const AdminUsers: React.FC = () => {
                   className="flex-1 py-2 px-4 bg-primary-600 text-white rounded-lg font-medium font-montserrat text-sm hover:bg-primary-700 transition-colors"
                 >
                   Manage
-                <p className="text-sm text-neutral-500 font-montserrat">
-                  {activeTab === 'agents' ? 'Agent Management' :
-                   activeTab === 'developers' ? 'Developer Management' :
-                   activeTab === 'buyers' ? 'Buyer Management' :
-                   'User Management'}
-                </p>
+                </button>
               </div>
             </div>
           ))}
@@ -304,6 +299,7 @@ const AdminUsers: React.FC = () => {
         )}
       </div>
 
+      <AdminBottomNavigation />
     </RoleBasedLayout>
   );
 };
