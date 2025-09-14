@@ -157,6 +157,7 @@ const DeveloperDashboard: React.FC = () => {
                 project={project}
                 onClick={() => navigate(`/developer/projects/${project.id}`)}
                 showActions={true}
+                onEdit={() => navigate(`/developer/projects/${project.id}/edit`)}
               />
             ))}
           </div>

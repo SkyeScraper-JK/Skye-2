@@ -6,6 +6,7 @@ interface ProjectCardProps {
   project: Project;
   onClick: () => void;
   showActions?: boolean;
+  onEdit?: () => void;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick, showActions = false }) => {
@@ -99,7 +100,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick, showActions
             <button 
               onClick={(e) => {
                 e.stopPropagation();
-                // Handle edit action
+                // Navigate to edit page - we need to pass this from parent
+                if (onEdit) {
+                  onEdit();
+                }
               }}
               className="flex-1 flex items-center justify-center py-2 px-4 bg-neutral-100 text-neutral-700 rounded-lg font-medium font-montserrat text-sm hover:bg-neutral-200 transition-colors"
             >
