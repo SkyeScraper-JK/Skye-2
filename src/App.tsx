@@ -19,6 +19,7 @@ import AdminUserDetails from './pages/AdminUserDetails';
 import AdminUserEdit from './pages/AdminUserEdit';
 import AdminLogs from './pages/AdminLogs';
 import AdminSettings from './pages/AdminSettings';
+import AdminProfile from './pages/AdminProfile';
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
           <Route path="/admin/users/:userId/edit" element={<AdminUserEdit />} />
           <Route path="/admin/logs" element={<AdminLogs />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
+          <Route path="/admin/profile" element={<AdminProfile />} />
         </Routes>
       </div>
     </Router>
