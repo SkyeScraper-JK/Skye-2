@@ -12,6 +12,7 @@ import DeveloperDashboard from './pages/DeveloperDashboard';
 import DeveloperProjects from './pages/DeveloperProjects';
 import AddProject from './pages/AddProject';
 import ProjectDetailsPage from './pages/ProjectDetailsPage';
+import EditProject from './pages/EditProject';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminUsers from './pages/AdminUsers';
 import AdminLogs from './pages/AdminLogs';
@@ -36,6 +37,7 @@ function App() {
           <Route path="/developer/projects" element={<DeveloperProjects />} />
           <Route path="/developer/projects/new" element={<AddProject />} />
           <Route path="/developer/projects/:projectId" element={<ProjectDetailsPage />} />
+          <Route path="/developer/projects/:projectId/edit" element={<EditProject />} />
           
           {/* Admin Routes */}
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
