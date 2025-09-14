@@ -11,6 +11,7 @@ import ProfilePage from './pages/ProfilePage';
 import DeveloperDashboard from './pages/DeveloperDashboard';
 import DeveloperProjects from './pages/DeveloperProjects';
 import AddProject from './pages/AddProject';
+import ProjectDetailsPage from './pages/ProjectDetailsPage';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminUsers from './pages/AdminUsers';
 import AdminLogs from './pages/AdminLogs';
