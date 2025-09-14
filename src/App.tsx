@@ -15,6 +15,8 @@ import ProjectDetailsPage from './pages/ProjectDetailsPage';
 import EditProject from './pages/EditProject';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminUsers from './pages/AdminUsers';
+import AdminUserDetails from './pages/AdminUserDetails';
+import AdminUserEdit from './pages/AdminUserEdit';
 import AdminLogs from './pages/AdminLogs';
 
 function App() {
@@ -42,6 +44,8 @@ function App() {
           {/* Admin Routes */}
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/users" element={<AdminUsers />} />
+          <Route path="/admin/users/:userId" element={<AdminUserDetails />} />
+          <Route path="/admin/users/:userId/edit" element={<AdminUserEdit />} />
           <Route path="/admin/logs" element={<AdminLogs />} />
         </Routes>
       </div>

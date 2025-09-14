@@ -54,6 +54,38 @@ const AdminUsers: React.FC = () => {
   const handleAction = (userId: string, action: string) => {
     console.log(`${action} user ${userId}`);
     setShowActionMenu(null);
+    
+    // Handle different actions
+    switch (action) {
+      case 'view':
+        navigate(`/admin/users/${userId}`);
+        break;
+      case 'edit':
+        navigate(`/admin/users/${userId}/edit`);
+        break;
+      case 'suspend':
+        // Here you would typically call an API to suspend the user
+        console.log(`Suspending user ${userId}`);
+        break;
+      case 'reactivate':
+        // Here you would typically call an API to reactivate the user
+        console.log(`Reactivating user ${userId}`);
+        break;
+      case 'reset':
+        // Here you would typically call an API to reset password
+        console.log(`Resetting password for user ${userId}`);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleViewDetails = (userId: string) => {
+    navigate(`/admin/users/${userId}`);
+  };
+
+  const handleManageUser = (userId: string) => {
+    navigate(`/admin/users/${userId}/edit`);
   };
 
   return (
@@ -221,13 +253,13 @@ const AdminUsers: React.FC = () => {
 
               <div className="flex space-x-2 pt-3 border-t border-neutral-100">
                 <button 
-                  onClick={() => handleAction(user.id, 'view')}
+                  onClick={() => handleViewDetails(user.id)}
                   className="flex-1 py-2 px-4 bg-neutral-100 text-neutral-700 rounded-lg font-medium font-montserrat text-sm hover:bg-neutral-200 transition-colors"
                 >
                   View Details
                 </button>
                 <button 
-                  onClick={() => handleAction(user.id, 'edit')}
+                  onClick={() => handleManageUser(user.id)}
                   className="flex-1 py-2 px-4 bg-primary-600 text-white rounded-lg font-medium font-montserrat text-sm hover:bg-primary-700 transition-colors"
                 >
                   Manage
