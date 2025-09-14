@@ -48,6 +48,9 @@ function App() {
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/users/:userId" element={<AdminUserDetails />} />
           <Route path="/admin/users/:userId/edit" element={<AdminUserEdit />} />
+          <Route path="/admin/agents" element={<AdminUsers />} />
+          <Route path="/admin/developers" element={<AdminUsers />} />
+          <Route path="/admin/buyers" element={<AdminUsers />} />
           <Route path="/admin/logs" element={<AdminLogs />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
           <Route path="/admin/profile" element={<AdminProfile />} />

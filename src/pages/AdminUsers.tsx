@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Search, Filter, MoreVertical, Lock, Unlock, RotateCcw, Edit, Eye, UserCheck, Building, Users } from 'lucide-react';
 import AdminBottomNavigation from '../components/AdminBottomNavigation';
 import RoleBasedLayout from '../components/RoleBasedLayout';
@@ -7,9 +7,23 @@ import { mockAdminUser, mockAllUsers } from '../data/mockData';
 
 const AdminUsers: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [showActionMenu, setShowActionMenu] = useState<string | null>(null);
+
+  // Set initial tab based on route
+  React.useEffect(() => {
+    if (location.pathname === '/admin/agents') {
+      setActiveTab('agents');
+    } else if (location.pathname === '/admin/developers') {
+      setActiveTab('developers');
+    } else if (location.pathname === '/admin/buyers') {
+      setActiveTab('buyers');
+    } else {
+      setActiveTab('all');
+    }
+  }, [location.pathname]);
 
   const tabs = [
     { id: 'all', label: 'All Users', icon: Users },
@@ -47,7 +61,10 @@ const AdminUsers: React.FC = () => {
   const filteredUsers = mockAllUsers.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesTab = activeTab === 'all' || user.role === activeTab.slice(0, -1);
+    const matchesTab = activeTab === 'all' || 
+                      (activeTab === 'agents' && user.role === 'agent') ||
+                      (activeTab === 'developers' && user.role === 'developer') ||
+                      (activeTab === 'buyers' && user.role === 'buyer');
     return matchesSearch && matchesTab;
   });
 
@@ -263,7 +280,12 @@ const AdminUsers: React.FC = () => {
                   className="flex-1 py-2 px-4 bg-primary-600 text-white rounded-lg font-medium font-montserrat text-sm hover:bg-primary-700 transition-colors"
                 >
                   Manage
-                </button>
+                <p className="text-sm text-neutral-500 font-montserrat">
+                  {activeTab === 'agents' ? 'Agent Management' :
+                   activeTab === 'developers' ? 'Developer Management' :
+                   activeTab === 'buyers' ? 'Buyer Management' :
+                   'User Management'}
+                </p>
               </div>
             </div>
           ))}
