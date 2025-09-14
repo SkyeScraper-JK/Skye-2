@@ -57,7 +57,7 @@ const AdminUsers: React.FC = () => {
   };
 
   return (
-    <RoleBasedLayout user={mockAdminUser} showRoleSwitcher={false}>
+    <RoleBasedLayout user={mockAdminUser} showRoleSwitcher={true}>
       {/* Header */}
       <div className="bg-white border-b border-neutral-100 sticky top-0 z-40">
         <div className="px-4 py-4">
