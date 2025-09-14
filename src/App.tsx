@@ -34,6 +34,7 @@ function App() {
           <Route path="/developer/dashboard" element={<DeveloperDashboard />} />
           <Route path="/developer/projects" element={<DeveloperProjects />} />
           <Route path="/developer/projects/new" element={<AddProject />} />
+          <Route path="/developer/projects/:projectId" element={<ProjectDetailsPage />} />
           
           {/* Admin Routes */}
           <Route path="/admin/dashboard" element={<AdminDashboard />} />

@@ -111,7 +111,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick, showActions
             </button>
           </div>
         ) : (
-          <button className="w-full bg-primary-600 text-white py-2 rounded-lg font-medium font-montserrat hover:bg-primary-700 transition-colors duration-200">
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick();
+            }}
+            className="w-full bg-primary-600 text-white py-2 rounded-lg font-medium font-montserrat hover:bg-primary-700 transition-colors duration-200"
+          >
             View Details
           </button>
         )}
