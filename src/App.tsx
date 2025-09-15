@@ -20,6 +20,7 @@ import AdminUserEdit from './pages/AdminUserEdit';
 import AdminLogs from './pages/AdminLogs';
 import AdminSettings from './pages/AdminSettings';
 import AdminProfile from './pages/AdminProfile';
+import DeveloperSettings from './pages/DeveloperSettings';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
           <Route path="/developer/projects/new" element={<AddProject />} />
           <Route path="/developer/projects/:projectId" element={<ProjectDetailsPage />} />
           <Route path="/developer/projects/:projectId/edit" element={<EditProject />} />
+          <Route path="/developer/settings" element={<DeveloperSettings />} />
           
           {/* Admin Routes */}
           <Route path="/admin/dashboard" element={<AdminDashboard />} />

@@ -10,7 +10,7 @@ const DeveloperBottomNavigation: React.FC = () => {
     { icon: Building, label: 'Projects', path: '/developer/projects', active: location.pathname.startsWith('/developer/projects') },
     { icon: Users, label: 'Leads', path: '/developer/leads', active: location.pathname === '/developer/leads' },
     { icon: FileText, label: 'Documents', path: '/developer/documents', active: location.pathname === '/developer/documents' },
-    { icon: Settings, label: 'Settings', path: '/developer/settings', active: location.pathname === '/developer/settings' },
+    { icon: Settings, label: 'Settings', path: '/developer/settings', active: location.pathname.startsWith('/developer/settings') },
   ];
 
   return (
