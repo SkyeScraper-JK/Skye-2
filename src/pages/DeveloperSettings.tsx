@@ -287,7 +287,6 @@ const DeveloperSettings: React.FC = () => {
                   </div>
                   <h3 className="text-lg font-bold text-neutral-800 font-montserrat">Team Members</h3>
                 </div>
-                <button className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg font-medium font-montserrat hover:bg-purple-700 transition-colors">
                 <button className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg font-medium font-montserrat hover:bg-primary-700 transition-colors">
                   <Users className="w-4 h-4 mr-2" strokeWidth={1.5} />
                   Add Member
