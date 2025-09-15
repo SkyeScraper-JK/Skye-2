@@ -8,8 +8,6 @@ const DeveloperBottomNavigation: React.FC = () => {
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/developer/dashboard', active: location.pathname === '/developer/dashboard' },
     { icon: Building, label: 'Projects', path: '/developer/projects', active: location.pathname.startsWith('/developer/projects') },
-    { icon: Users, label: 'Leads', path: '/developer/leads', active: location.pathname === '/developer/leads' },
-    { icon: FileText, label: 'Documents', path: '/developer/documents', active: location.pathname === '/developer/documents' },
     { icon: Settings, label: 'Settings', path: '/developer/settings', active: location.pathname.startsWith('/developer/settings') },
   ];
 

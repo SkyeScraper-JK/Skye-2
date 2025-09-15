@@ -288,6 +288,7 @@ const DeveloperSettings: React.FC = () => {
                   <h3 className="text-lg font-bold text-neutral-800 font-montserrat">Team Members</h3>
                 </div>
                 <button className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg font-medium font-montserrat hover:bg-purple-700 transition-colors">
+                <button className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg font-medium font-montserrat hover:bg-primary-700 transition-colors">
                   <Users className="w-4 h-4 mr-2" strokeWidth={1.5} />
                   Add Member
                 </button>
@@ -308,7 +309,7 @@ const DeveloperSettings: React.FC = () => {
                     
                     <div className="flex flex-wrap gap-2">
                       {member.permissions.map((permission, index) => (
-                        <span key={index} className="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium font-montserrat rounded-md">
+                        <span key={index} className="px-2 py-1 bg-primary-100 text-primary-700 text-xs font-medium font-montserrat rounded-md">
                           {permission.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                         </span>
                       ))}
@@ -320,24 +321,24 @@ const DeveloperSettings: React.FC = () => {
 
             <div className="bg-white rounded-xl shadow-sm border border-neutral-100 p-6">
               <div className="flex items-center mb-4">
-                <div className="w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center mr-3">
-                  <Shield className="w-5 h-5 text-orange-600" strokeWidth={1.5} />
+                <div className="w-10 h-10 bg-accent-gold bg-opacity-20 rounded-lg flex items-center justify-center mr-3">
+                  <Shield className="w-5 h-5 text-accent-gold" strokeWidth={1.5} />
                 </div>
                 <h3 className="text-lg font-bold text-neutral-800 font-montserrat">Permission Templates</h3>
               </div>
               
               <div className="grid grid-cols-1 gap-3">
-                <div className="p-3 bg-orange-50 rounded-lg border border-orange-200">
-                  <h4 className="font-medium text-orange-800 font-montserrat mb-2">Project Manager</h4>
-                  <p className="text-sm text-orange-700 font-montserrat">Full project access, unit management, booking oversight</p>
+                <div className="p-3 bg-primary-50 rounded-lg border border-primary-200">
+                  <h4 className="font-medium text-primary-800 font-montserrat mb-2">Project Manager</h4>
+                  <p className="text-sm text-primary-700 font-montserrat">Full project access, unit management, booking oversight</p>
                 </div>
-                <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-                  <h4 className="font-medium text-green-800 font-montserrat mb-2">Sales Manager</h4>
-                  <p className="text-sm text-green-700 font-montserrat">Lead management, booking creation, payment tracking</p>
+                <div className="p-3 bg-accent-gold bg-opacity-20 rounded-lg border border-accent-gold border-opacity-30">
+                  <h4 className="font-medium text-accent-gold font-montserrat mb-2">Sales Manager</h4>
+                  <p className="text-sm text-neutral-700 font-montserrat">Lead management, booking creation, payment tracking</p>
                 </div>
-                <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                  <h4 className="font-medium text-blue-800 font-montserrat mb-2">Marketing Head</h4>
-                  <p className="text-sm text-blue-700 font-montserrat">Content management, analytics access, campaign oversight</p>
+                <div className="p-3 bg-neutral-50 rounded-lg border border-neutral-200">
+                  <h4 className="font-medium text-neutral-800 font-montserrat mb-2">Marketing Head</h4>
+                  <p className="text-sm text-neutral-700 font-montserrat">Content management, analytics access, campaign oversight</p>
                 </div>
               </div>
             </div>

@@ -458,7 +458,7 @@ const AddProject: React.FC = () => {
               <button
                 type="button"
                 onClick={addPaymentPlan}
-                className="w-full flex items-center justify-center py-3 px-4 bg-green-600 text-white rounded-xl font-medium font-montserrat hover:bg-green-700 transition-colors"
+                className="w-full flex items-center justify-center py-3 px-4 bg-primary-600 text-white rounded-xl font-medium font-montserrat hover:bg-primary-700 transition-colors"
               >
                 <Plus className="w-5 h-5 mr-2" strokeWidth={1.5} />
                 Add Payment Plan
@@ -469,11 +469,11 @@ const AddProject: React.FC = () => {
               <div className="space-y-3">
                 <h4 className="font-medium text-neutral-700 font-montserrat">Added Payment Plans:</h4>
                 {formData.paymentPlans.map((plan) => (
-                  <div key={plan.id} className="p-4 bg-green-50 rounded-lg border border-green-200">
+                  <div key={plan.id} className="p-4 bg-primary-50 rounded-lg border border-primary-200">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <h5 className="font-bold text-green-800 font-montserrat mb-2">{plan.name}</h5>
-                        <div className="grid grid-cols-2 gap-2 text-sm text-green-700">
+                        <h5 className="font-bold text-primary-800 font-montserrat mb-2">{plan.name}</h5>
+                        <div className="grid grid-cols-2 gap-2 text-sm text-primary-700">
                           <div>Down Payment: <span className="font-medium">{plan.downPayment}</span></div>
                           <div>Installments: <span className="font-medium">{plan.installments}</span></div>
                           <div>Possession: <span className="font-medium">{plan.possessionPayment}</span></div>
@@ -574,7 +574,7 @@ const AddProject: React.FC = () => {
                 <button
                   type="button"
                   onClick={addUnitType}
-                  className="w-full flex items-center justify-center py-3 px-4 bg-blue-600 text-white rounded-xl font-medium font-montserrat hover:bg-blue-700 transition-colors"
+                  className="w-full flex items-center justify-center py-3 px-4 bg-primary-600 text-white rounded-xl font-medium font-montserrat hover:bg-primary-700 transition-colors"
                 >
                   <Plus className="w-5 h-5 mr-2" strokeWidth={1.5} />
                   Add Unit Type
@@ -586,10 +586,10 @@ const AddProject: React.FC = () => {
               <div className="space-y-3">
                 <h4 className="font-medium text-neutral-700 font-montserrat">Unit Types:</h4>
                 {formData.availabilityGrid.unitTypes.map((unitType, index) => (
-                  <div key={index} className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <div key={index} className="p-4 bg-primary-50 rounded-lg border border-primary-200">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <div className="flex items-center space-x-4 text-sm text-blue-700">
+                        <div className="flex items-center space-x-4 text-sm text-primary-700">
                           <span className="font-bold">{unitType.type}</span>
                           <span>{unitType.count} units/floor</span>
                           <span>{unitType.area}</span>
