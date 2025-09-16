@@ -19,8 +19,6 @@ import AdminUserDetails from './pages/AdminUserDetails';
 import AdminUserEdit from './pages/AdminUserEdit';
 import AdminLogs from './pages/AdminLogs';
 import AdminSettings from './pages/AdminSettings';
-import AdminProjects from './pages/AdminProjects';
-import AdminLeadsBookings from './pages/AdminLeadsBookings';
 import AdminProfile from './pages/AdminProfile';
 import DeveloperSettings from './pages/DeveloperSettings';
 
@@ -58,8 +56,6 @@ function App() {
           <Route path="/admin/logs" element={<AdminLogs />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
           <Route path="/admin/profile" element={<AdminProfile />} />
-          <Route path="/admin/projects" element={<AdminProjects />} />
-          <Route path="/admin/leads-bookings" element={<AdminLeadsBookings />} />
         </Routes>
       </div>
     </Router>

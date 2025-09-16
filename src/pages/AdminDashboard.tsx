@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Bell, Users, Building, UserCheck, Shield, Activity, Search, MoreVertical, Lock, Unlock, RotateCcw, Edit, Eye, FileText, Calendar, TrendingUp } from 'lucide-react';
 import AdminBottomNavigation from '../components/AdminBottomNavigation';
 import RoleBasedLayout from '../components/RoleBasedLayout';
-import { mockAdminProfile, mockAdminUser, mockAdminStats, mockRecentActions, mockProjects, mockLeads, mockBookings } from '../data/mockData';
+import { mockAdminProfile, mockAdminUser, mockAdminStats, mockRecentActions } from '../data/mockData';
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ const AdminDashboard: React.FC = () => {
                 <div className="w-24 h-1 bg-gradient-to-r from-accent-gold to-primary-600 mx-auto mt-2 rounded-full"></div>
               </h1>
               <p className="text-sm text-neutral-500 font-montserrat mt-2">
-                Superuser panel to manage application users
+                System administration and user management
               </p>
             </div>
             
@@ -136,41 +136,6 @@ const AdminDashboard: React.FC = () => {
           </button>
         </div>
 
-        {/* Additional Stats Row */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <button 
-            onClick={() => navigate('/admin/projects')}
-            className="bg-white rounded-xl shadow-sm border border-neutral-100 p-4 hover:shadow-md transition-all duration-200 text-left"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
-                <Building className="w-5 h-5 text-green-600" strokeWidth={1.5} />
-              </div>
-              <span className="text-2xl font-bold text-green-600 font-montserrat">
-                {mockProjects.length}
-              </span>
-            </div>
-            <p className="text-sm font-medium text-neutral-700 font-montserrat">Total Projects</p>
-            <p className="text-xs text-neutral-500 font-montserrat">All developer projects</p>
-          </button>
-
-          <button 
-            onClick={() => navigate('/admin/leads-bookings')}
-            className="bg-white rounded-xl shadow-sm border border-neutral-100 p-4 hover:shadow-md transition-all duration-200 text-left"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-orange-600" strokeWidth={1.5} />
-              </div>
-              <span className="text-2xl font-bold text-orange-600 font-montserrat">
-                {mockLeads.length + mockBookings.length}
-              </span>
-            </div>
-            <p className="text-sm font-medium text-neutral-700 font-montserrat">Leads & Bookings</p>
-            <p className="text-xs text-neutral-500 font-montserrat">{mockLeads.length} leads, {mockBookings.length} bookings</p>
-          </button>
-        </div>
-
         {/* Quick Actions */}
         <div className="mb-6">
           <h3 className="text-lg font-bold text-neutral-800 font-montserrat mb-4">Quick Actions</h3>
@@ -184,11 +149,11 @@ const AdminDashboard: React.FC = () => {
               Manage Users
             </button>
             <button 
-              onClick={() => navigate('/admin/projects')}
+              onClick={() => navigate('/admin/logs')}
               className="flex items-center justify-center p-4 bg-white border border-neutral-200 text-neutral-700 rounded-xl font-medium font-montserrat hover:bg-neutral-50 transition-colors"
             >
-              <Building className="w-5 h-5 mr-2" strokeWidth={1.5} />
-              Manage Projects
+              <Activity className="w-5 h-5 mr-2" strokeWidth={1.5} />
+              View Logs
             </button>
           </div>
         </div>
@@ -296,6 +261,7 @@ const AdminDashboard: React.FC = () => {
         </div>
       </div>
 
+      <AdminBottomNavigation />
     </RoleBasedLayout>
   );
 };
