@@ -58,6 +58,8 @@ function App() {
           <Route path="/admin/logs" element={<AdminLogs />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
           <Route path="/admin/profile" element={<AdminProfile />} />
+          <Route path="/admin/projects" element={<AdminProjects />} />
+          <Route path="/admin/leads-bookings" element={<AdminLeadsBookings />} />
         </Routes>
       </div>
     </Router>
