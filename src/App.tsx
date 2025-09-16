@@ -25,6 +25,8 @@ import AdminProjectDetails from './pages/AdminProjectDetails';
 import AdminUnitManagement from './pages/AdminUnitManagement';
 import AdminProjects from './pages/AdminProjects';
 import AdminLeadsBookings from './pages/AdminLeadsBookings';
+import AdminLeadDetails from './pages/AdminLeadDetails';
+import AdminBookingDetails from './pages/AdminBookingDetails';
 
 function App() {
   return (
@@ -61,6 +63,8 @@ function App() {
           <Route path="/admin/buyers" element={<AdminUsers />} />
           <Route path="/admin/projects/:projectId" element={<AdminProjectDetails />} />
           <Route path="/admin/projects/:projectId/units" element={<AdminUnitManagement />} />
+          <Route path="/admin/leads/:leadId" element={<AdminLeadDetails />} />
+          <Route path="/admin/bookings/:bookingId" element={<AdminBookingDetails />} />
           <Route path="/admin/logs" element={<AdminLogs />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
           <Route path="/admin/profile" element={<AdminProfile />} />
