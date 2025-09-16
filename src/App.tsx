@@ -30,6 +30,7 @@ import AdminAddProject from './pages/AdminAddProject';
 import AdminLeads from './pages/AdminLeads';
 import AdminBookings from './pages/AdminBookings';
 import LeadDetailsPage from './pages/LeadDetailsPage';
+import BookingFormPage from './pages/BookingFormPage';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Route path="/leads" element={<LeadsPage />} />
           <Route path="/leads/:leadId" element={<LeadDetailsPage />} />
           <Route path="/bookings" element={<BookingsPage />} />
+          <Route path="/property/:propertyId/book" element={<BookingFormPage />} />
           <Route path="/messages" element={<MessagesPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           

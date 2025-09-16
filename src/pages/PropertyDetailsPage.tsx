@@ -312,8 +312,11 @@ const PropertyDetailsPage: React.FC = () => {
       {/* Bottom CTA */}
       <div className="fixed bottom-16 left-0 right-0 bg-white border-t border-neutral-200 p-4">
         <div className="flex space-x-3 max-w-md mx-auto">
-          <button className="flex-1 bg-primary-600 text-white py-3 rounded-lg font-medium font-montserrat hover:bg-primary-700 transition-colors">
-            Reserve Now
+          <button 
+            onClick={() => navigate(`/property/${propertyId}/book`)}
+            className="flex-1 bg-primary-600 text-white py-3 rounded-lg font-medium font-montserrat hover:bg-primary-700 transition-colors"
+          >
+            Book Now
           </button>
           <button className="p-3 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors">
             <Phone className="w-5 h-5 text-neutral-600" strokeWidth={1.5} />
