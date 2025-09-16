@@ -106,8 +106,8 @@ const AdminAddProject: React.FC = () => {
                     ))}
                   </select>
                 </div>
-                <p className="text-xs text-red-600 font-montserrat mt-1">
-                  ⚠️ Admin Override: Creating project on behalf of selected developer. Project will be linked to developer for reporting.
+                <p className="text-xs text-blue-600 font-montserrat mt-1">
+                  ℹ️ Admin Override: Creating project on behalf of selected developer. Project will be linked to developer for reporting and management.
                 </p>
               </div>
 
