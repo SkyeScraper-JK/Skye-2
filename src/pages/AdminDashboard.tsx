@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, Users, Building, UserCheck, Shield, Activity, Search, MoreVertical, Lock, Unlock, RotateCcw, Edit, Eye, FileText, Calendar, TrendingUp } from 'lucide-react';
+import { Bell, Users, Building, UserCheck, Shield, Activity, Search, MoreVertical, Lock, Unlock, RotateCcw, Edit, Eye, FileText, Calendar, TrendingUp, Settings } from 'lucide-react';
 import AdminBottomNavigation from '../components/AdminBottomNavigation';
 import RoleBasedLayout from '../components/RoleBasedLayout';
 import { mockAdminProfile, mockAdminUser, mockAdminStats, mockRecentActions } from '../data/mockData';
