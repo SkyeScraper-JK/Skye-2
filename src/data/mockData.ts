@@ -191,11 +191,34 @@ export const mockLeads: Lead[] = [
     phone: '+91 98765 43210',
     email: 'rajesh.kumar@email.com',
     status: 'Hot',
+    stage: 'Negotiation',
     projectName: 'Godrej Meridien',
     developerName: 'Godrej Properties',
     lastInteraction: '2 hours ago',
     budget: '₹1.2 - 1.5 Cr',
-    requirements: '3 BHK, Ready to move'
+    requirements: '3 BHK, Ready to move',
+    notes: [
+      'Very interested in 3BHK unit on higher floors',
+      'Prefers east-facing units for morning sunlight',
+      'Budget is flexible, can go up to ₹1.6 Cr for right unit'
+    ],
+    reminders: [
+      {
+        id: 'r1',
+        leadId: '1',
+        type: 'site_visit',
+        title: 'Site Visit Scheduled',
+        description: 'Show 3BHK units on floors 10-15',
+        dueDate: '2024-12-20',
+        dueTime: '10:00',
+        isCompleted: false,
+        priority: 'high',
+        createdAt: '2024-12-15'
+      }
+    ],
+    score: 9,
+    tags: ['High Budget', 'Ready Buyer', 'Immediate'],
+    nextFollowUp: 'Site visit this weekend'
   },
   {
     id: '2',
@@ -203,11 +226,33 @@ export const mockLeads: Lead[] = [
     phone: '+91 87654 32109',
     email: 'priya.sharma@email.com',
     status: 'Warm',
+    stage: 'Site Visit',
     projectName: 'DLF The Crest',
     developerName: 'DLF Limited',
     lastInteraction: '1 day ago',
     budget: '₹2 - 2.5 Cr',
-    requirements: '4 BHK, Golf course view'
+    requirements: '4 BHK, Golf course view',
+    notes: [
+      'Interested in golf course facing units only',
+      'Husband travels frequently, wants good connectivity'
+    ],
+    reminders: [
+      {
+        id: 'r2',
+        leadId: '2',
+        type: 'follow_up',
+        title: 'Follow up after site visit',
+        description: 'Check feedback on units shown yesterday',
+        dueDate: '2024-12-18',
+        dueTime: '14:00',
+        isCompleted: false,
+        priority: 'medium',
+        createdAt: '2024-12-15'
+      }
+    ],
+    score: 7,
+    tags: ['Golf View', 'Premium'],
+    nextFollowUp: 'Follow up on site visit feedback'
   },
   {
     id: '3',
@@ -215,11 +260,20 @@ export const mockLeads: Lead[] = [
     phone: '+91 76543 21098',
     email: 'amit.patel@email.com',
     status: 'Cold',
+    stage: 'Contacted',
     projectName: 'Godrej Park Avenue',
     developerName: 'Godrej Properties',
     lastInteraction: '5 days ago',
     budget: '₹95 Lac - 1.2 Cr',
-    requirements: '2 BHK, Good connectivity'
+    requirements: '2 BHK, Good connectivity',
+    notes: [
+      'First time buyer, needs guidance on process',
+      'Concerned about loan approval'
+    ],
+    reminders: [],
+    score: 4,
+    tags: ['First Time Buyer', 'Loan Required'],
+    nextFollowUp: 'Call to check loan pre-approval status'
   },
   {
     id: '4',
@@ -227,11 +281,33 @@ export const mockLeads: Lead[] = [
     phone: '+91 65432 10987',
     email: 'sneha.gupta@email.com',
     status: 'Hot',
+    stage: 'New',
     projectName: 'Prestige Lakeside',
     developerName: 'Prestige Group',
     lastInteraction: '30 minutes ago',
     budget: '₹85 Lac - 1 Cr',
-    requirements: '2-3 BHK, Near IT corridor'
+    requirements: '2-3 BHK, Near IT corridor',
+    notes: [
+      'Works in IT, prefers proximity to tech parks',
+      'Looking for investment + self-use'
+    ],
+    reminders: [
+      {
+        id: 'r4',
+        leadId: '4',
+        type: 'call',
+        title: 'Initial consultation call',
+        description: 'Understand detailed requirements and budget',
+        dueDate: '2024-12-16',
+        dueTime: '11:00',
+        isCompleted: false,
+        priority: 'high',
+        createdAt: '2024-12-15'
+      }
+    ],
+    score: 8,
+    tags: ['IT Professional', 'Investment'],
+    nextFollowUp: 'Schedule initial consultation'
   },
   {
     id: '5',
@@ -239,11 +315,20 @@ export const mockLeads: Lead[] = [
     phone: '+91 54321 09876',
     email: 'vikram.singh@email.com',
     status: 'Warm',
+    stage: 'Contacted',
     projectName: 'Brigade Gateway',
     developerName: 'Brigade Group',
     lastInteraction: '3 days ago',
     budget: '₹78 Lac - 95 Lac',
-    requirements: '1-2 BHK, Investment purpose'
+    requirements: '1-2 BHK, Investment purpose',
+    notes: [
+      'Pure investment buyer, looking for rental yield',
+      'Owns 2 properties already'
+    ],
+    reminders: [],
+    score: 6,
+    tags: ['Investor', 'Rental Yield'],
+    nextFollowUp: 'Share rental yield analysis'
   }
 ];
 
@@ -260,11 +345,44 @@ export const mockBookings: Booking[] = [
     },
     bookingDate: '15 Nov 2024',
     status: 'Confirmed',
+    stage: 'Agreement',
     totalAmount: '₹1.35 Cr',
     paidAmount: '₹27 Lac',
     pendingAmount: '₹1.08 Cr',
     paymentProgress: 20,
-    nextPaymentDate: '15 Dec 2024'
+    nextPaymentDate: '15 Dec 2024',
+    buyerName: 'Rajesh Kumar',
+    agentNotes: [
+      'Buyer very satisfied with unit selection',
+      'Agreement signing scheduled for next week'
+    ],
+    milestones: [
+      {
+        id: 'm1',
+        stage: 'Token',
+        title: 'Token Amount Paid',
+        description: 'Initial booking amount received',
+        isCompleted: true,
+        completedDate: '15 Nov 2024',
+        documents: ['token_receipt.pdf']
+      },
+      {
+        id: 'm2',
+        stage: 'Agreement',
+        title: 'Agreement Signing',
+        description: 'Sale agreement to be signed',
+        isCompleted: false,
+        documents: ['draft_agreement.pdf']
+      },
+      {
+        id: 'm3',
+        stage: 'Final Closure',
+        title: 'Registration & Handover',
+        description: 'Property registration and key handover',
+        isCompleted: false,
+        documents: []
+      }
+    ]
   },
   {
     id: '2',
@@ -278,11 +396,44 @@ export const mockBookings: Booking[] = [
     },
     bookingDate: '22 Oct 2024',
     status: 'Payment Pending',
+    stage: 'Token',
     totalAmount: '₹2.8 Cr',
     paidAmount: '₹56 Lac',
     pendingAmount: '₹2.24 Cr',
     paymentProgress: 20,
-    nextPaymentDate: '22 Dec 2024'
+    nextPaymentDate: '22 Dec 2024',
+    buyerName: 'Priya Sharma',
+    agentNotes: [
+      'Waiting for loan approval from HDFC Bank',
+      'Buyer committed, just processing paperwork'
+    ],
+    milestones: [
+      {
+        id: 'm4',
+        stage: 'Token',
+        title: 'Token Amount Paid',
+        description: 'Initial booking amount received',
+        isCompleted: true,
+        completedDate: '22 Oct 2024',
+        documents: ['token_receipt.pdf']
+      },
+      {
+        id: 'm5',
+        stage: 'Agreement',
+        title: 'Agreement Signing',
+        description: 'Pending loan approval',
+        isCompleted: false,
+        documents: []
+      },
+      {
+        id: 'm6',
+        stage: 'Final Closure',
+        title: 'Registration & Handover',
+        description: 'Final registration process',
+        isCompleted: false,
+        documents: []
+      }
+    ]
   },
   {
     id: '3',
@@ -296,11 +447,83 @@ export const mockBookings: Booking[] = [
     },
     bookingDate: '8 Dec 2024',
     status: 'Reserved',
+    stage: 'Token',
     totalAmount: '₹92 Lac',
     paidAmount: '₹5 Lac',
     pendingAmount: '₹87 Lac',
     paymentProgress: 5,
-    nextPaymentDate: '8 Jan 2025'
+    nextPaymentDate: '8 Jan 2025',
+    buyerName: 'Sneha Gupta',
+    agentNotes: [
+      'New booking, very excited about the project',
+      'Needs to arrange remaining token amount'
+    ],
+    milestones: [
+      {
+        id: 'm7',
+        stage: 'Token',
+        title: 'Token Amount Paid',
+        description: 'Partial token paid, balance pending',
+        isCompleted: false,
+        documents: []
+      },
+      {
+        id: 'm8',
+        stage: 'Agreement',
+        title: 'Agreement Signing',
+        description: 'Agreement preparation in progress',
+        isCompleted: false,
+        documents: []
+      },
+      {
+        id: 'm9',
+        stage: 'Final Closure',
+        title: 'Registration & Handover',
+        description: 'Final closure process',
+        isCompleted: false,
+        documents: []
+      }
+    ]
+  }
+];
+
+// Enhanced mock data for reminders
+export const mockTodayReminders = [
+  {
+    id: 'r1',
+    leadId: '1',
+    type: 'site_visit' as const,
+    title: 'Site Visit - Rajesh Kumar',
+    description: 'Show 3BHK units on floors 10-15',
+    dueDate: '2024-12-20',
+    dueTime: '10:00',
+    isCompleted: false,
+    priority: 'high' as const,
+    createdAt: '2024-12-15'
+  },
+  {
+    id: 'r4',
+    leadId: '4',
+    type: 'call' as const,
+    title: 'Initial Call - Sneha Gupta',
+    description: 'Understand detailed requirements and budget',
+    dueDate: '2024-12-16',
+    dueTime: '11:00',
+    isCompleted: false,
+    priority: 'high' as const,
+    createdAt: '2024-12-15'
+  },
+  {
+    id: 'r5',
+    leadId: '2',
+    type: 'follow_up' as const,
+    title: 'Follow up - Priya Sharma',
+    description: 'Check feedback on units shown yesterday',
+    dueDate: '2024-12-18',
+    dueTime: '14:00',
+    isCompleted: false,
+    priority: 'medium' as const,
+    createdAt: '2024-12-15'
   }
 ];
 

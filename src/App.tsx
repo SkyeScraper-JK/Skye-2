@@ -29,6 +29,7 @@ import AdminBookingDetails from './pages/AdminBookingDetails';
 import AdminAddProject from './pages/AdminAddProject';
 import AdminLeads from './pages/AdminLeads';
 import AdminBookings from './pages/AdminBookings';
+import LeadDetailsPage from './pages/LeadDetailsPage';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path="/property/:propertyId" element={<PropertyDetailsPage />} />
           <Route path="/property/:propertyId/availability" element={<AvailabilityGridPage />} />
           <Route path="/leads" element={<LeadsPage />} />
+          <Route path="/leads/:leadId" element={<LeadDetailsPage />} />
           <Route path="/bookings" element={<BookingsPage />} />
           <Route path="/messages" element={<MessagesPage />} />
           <Route path="/profile" element={<ProfilePage />} />

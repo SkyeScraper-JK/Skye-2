@@ -65,11 +65,30 @@ export interface Lead {
   phone: string;
   email: string;
   status: 'Hot' | 'Warm' | 'Cold';
+  stage: 'New' | 'Contacted' | 'Site Visit' | 'Negotiation' | 'Closed';
   projectName: string;
   developerName: string;
   lastInteraction: string;
   budget: string;
   requirements: string;
+  notes: string[];
+  reminders: Reminder[];
+  score: number; // 1-10 scoring
+  tags: string[];
+  nextFollowUp?: string;
+}
+
+export interface Reminder {
+  id: string;
+  leadId: string;
+  type: 'call' | 'site_visit' | 'follow_up' | 'negotiation' | 'other';
+  title: string;
+  description: string;
+  dueDate: string;
+  dueTime: string;
+  isCompleted: boolean;
+  priority: 'low' | 'medium' | 'high';
+  createdAt: string;
 }
 
 export interface Booking {
@@ -84,11 +103,25 @@ export interface Booking {
   };
   bookingDate: string;
   status: 'Reserved' | 'Payment Pending' | 'Confirmed';
+  stage: 'Token' | 'Agreement' | 'Final Closure';
   totalAmount: string;
   paidAmount: string;
   pendingAmount: string;
   paymentProgress: number;
   nextPaymentDate?: string;
+  buyerName: string;
+  agentNotes: string[];
+  milestones: BookingMilestone[];
+}
+
+export interface BookingMilestone {
+  id: string;
+  stage: 'Token' | 'Agreement' | 'Final Closure';
+  title: string;
+  description: string;
+  isCompleted: boolean;
+  completedDate?: string;
+  documents: string[];
 }
 
 export interface Message {
