@@ -47,7 +47,7 @@ const AdminProjects: React.FC = () => {
   };
 
   const handleEditProject = (projectId: string) => {
-    navigate(`/admin/projects/${projectId}/edit`);
+    navigate(`/admin/projects/${projectId}`);
   };
 
   return (

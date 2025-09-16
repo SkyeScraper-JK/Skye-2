@@ -21,6 +21,8 @@ import AdminLogs from './pages/AdminLogs';
 import AdminSettings from './pages/AdminSettings';
 import AdminProfile from './pages/AdminProfile';
 import DeveloperSettings from './pages/DeveloperSettings';
+import AdminProjectDetails from './pages/AdminProjectDetails';
+import AdminUnitManagement from './pages/AdminUnitManagement';
 import AdminProjects from './pages/AdminProjects';
 import AdminLeadsBookings from './pages/AdminLeadsBookings';
 
@@ -57,6 +59,8 @@ function App() {
           <Route path="/admin/agents" element={<AdminUsers />} />
           <Route path="/admin/developers" element={<AdminUsers />} />
           <Route path="/admin/buyers" element={<AdminUsers />} />
+          <Route path="/admin/projects/:projectId" element={<AdminProjectDetails />} />
+          <Route path="/admin/projects/:projectId/units" element={<AdminUnitManagement />} />
           <Route path="/admin/logs" element={<AdminLogs />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
           <Route path="/admin/profile" element={<AdminProfile />} />

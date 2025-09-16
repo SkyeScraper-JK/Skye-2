@@ -62,15 +62,16 @@ const AdminLeadsBookings: React.FC = () => {
     
     switch (action) {
       case 'view':
-        navigate(`/admin/${type}s/${id}`);
+        // In a real app, this would navigate to detailed view
+        alert(`Viewing ${type} details for ID: ${id}\n\nThis would open a detailed ${type} information page with full history, contact details, and interaction timeline.`);
         break;
       case 'reassign':
         // In a real app, this would open a reassignment modal
-        alert(`Reassigning ${type} ${id} - This would open a reassignment modal`);
+        alert(`Reassigning ${type} ID: ${id}\n\nThis would open a modal to:\n• Select new Agent/Developer\n• Add reassignment reason\n• Send notifications to all parties\n• Log the change in audit trail`);
         break;
       case 'update_status':
         // In a real app, this would open a status update modal
-        alert(`Updating ${type} status for ${id} - This would open a status update modal`);
+        alert(`Updating ${type} status for ID: ${id}\n\nThis would open a modal to:\n• Change status (Hot/Warm/Cold for leads, Reserved/Confirmed/Cancelled for bookings)\n• Add status change reason\n• Set follow-up reminders\n• Notify relevant parties`);
         break;
       default:
         break;
