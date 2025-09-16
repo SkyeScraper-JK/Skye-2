@@ -404,9 +404,6 @@ const AdminBookings: React.FC = () => {
     </RoleBasedLayout>
   );
 
-  function handleViewDetails(bookingId: string) {
-    navigate(`/admin/bookings/${bookingId}`);
-  }
 };
 
 export default AdminBookings;
