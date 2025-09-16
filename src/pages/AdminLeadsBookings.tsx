@@ -61,18 +61,17 @@ const AdminLeadsBookings: React.FC = () => {
   });
 
   const handleLeadAction = (leadId: string, action: string) => {
-    console.log(`${action} lead ${leadId}`);
     setShowActionMenu(null);
     
     switch (action) {
       case 'reassign':
-        // Open reassignment modal
+        alert(`Reassigning lead ${leadId} to a different agent. This would open a reassignment modal in a full implementation.`);
         break;
       case 'update_status':
-        // Open status update modal
+        alert(`Updating status for lead ${leadId}. This would open a status update modal in a full implementation.`);
         break;
       case 'view':
-        navigate(`/admin/leads/${leadId}`);
+        alert(`Viewing details for lead ${leadId}. This would navigate to a detailed lead view in a full implementation.`);
         break;
       default:
         break;
@@ -80,18 +79,17 @@ const AdminLeadsBookings: React.FC = () => {
   };
 
   const handleBookingAction = (bookingId: string, action: string) => {
-    console.log(`${action} booking ${bookingId}`);
     setShowActionMenu(null);
     
     switch (action) {
       case 'reassign':
-        // Open reassignment modal
+        alert(`Reassigning booking ${bookingId} to a different agent/developer. This would open a reassignment modal in a full implementation.`);
         break;
       case 'update_status':
-        // Open status update modal
+        alert(`Updating status for booking ${bookingId}. This would open a status update modal in a full implementation.`);
         break;
       case 'view':
-        navigate(`/admin/bookings/${bookingId}`);
+        alert(`Viewing details for booking ${bookingId}. This would navigate to a detailed booking view in a full implementation.`);
         break;
       default:
         break;

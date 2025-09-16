@@ -41,18 +41,17 @@ const AdminProjects: React.FC = () => {
   });
 
   const handleAction = (projectId: string, action: string) => {
-    console.log(`${action} project ${projectId}`);
     setShowActionMenu(null);
     
     switch (action) {
       case 'view':
-        navigate(`/admin/projects/${projectId}`);
+        navigate(`/developer/projects/${projectId}`);
         break;
       case 'edit':
-        navigate(`/admin/projects/${projectId}/edit`);
+        navigate(`/developer/projects/${projectId}/edit`);
         break;
       case 'units':
-        navigate(`/admin/projects/${projectId}/units`);
+        navigate(`/property/${projectId}/availability`);
         break;
       default:
         break;
