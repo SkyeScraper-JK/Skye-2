@@ -21,6 +21,7 @@ import AdminLogs from './pages/AdminLogs';
 import AdminSettings from './pages/AdminSettings';
 import AdminProjects from './pages/AdminProjects';
 import AdminLeadsBookings from './pages/AdminLeadsBookings';
+import AdminProfile from './pages/AdminProfile';
 import DeveloperSettings from './pages/DeveloperSettings';
 
 function App() {
