@@ -72,10 +72,10 @@ const AdminProjects: React.FC = () => {
             </div>
             
             <button 
-              onClick={() => navigate('/admin/projects/new')}
+              onClick={() => navigate('/admin/projects/add')}
               className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg font-medium font-montserrat hover:bg-red-700 transition-colors"
             >
-              <Plus className="w-4 h-4 mr-2" strokeWidth={1.5} />
+              <Building className="w-4 h-4 mr-2" strokeWidth={1.5} />
               Add Project
             </button>
           </div>
