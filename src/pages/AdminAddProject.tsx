@@ -269,7 +269,7 @@ const AdminAddProject: React.FC = () => {
                 <button
                   type="button"
                   onClick={addAmenity}
-                  className="px-4 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors"
+                  className="px-4 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors"
                 >
                   <Plus className="w-5 h-5" strokeWidth={1.5} />
                 </button>
@@ -324,7 +324,7 @@ const AdminAddProject: React.FC = () => {
             </button>
             <button
               type="submit"
-              className="flex-1 py-3 px-6 bg-red-600 text-white rounded-xl font-medium font-montserrat hover:bg-red-700 transition-colors"
+              className="flex-1 py-3 px-6 bg-primary-600 text-white rounded-xl font-medium font-montserrat hover:bg-primary-700 transition-colors"
             >
               Create Project
             </button>
