@@ -155,6 +155,13 @@ const AdminDashboard: React.FC = () => {
               <Building className="w-5 h-5 mr-2" strokeWidth={1.5} />
               Manage Projects
             </button>
+            <button 
+              onClick={() => navigate('/admin/bookings')}
+              className="flex items-center justify-center p-4 bg-red-100 text-red-700 rounded-xl font-medium font-montserrat hover:bg-red-200 transition-colors"
+            >
+              <Calendar className="w-5 h-5 mr-2" strokeWidth={1.5} />
+              Booking Management
+            </button>
           </div>
           
           <div className="grid grid-cols-2 gap-3">
