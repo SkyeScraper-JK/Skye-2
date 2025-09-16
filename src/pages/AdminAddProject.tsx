@@ -106,8 +106,8 @@ const AdminAddProject: React.FC = () => {
                     ))}
                   </select>
                 </div>
-                <p className="text-xs text-red-600 font-montserrat mt-1">
-                  ⚠️ Admin Override: Creating project on behalf of selected developer. Project will be linked to developer for reporting.
+                <p className="text-xs text-blue-600 font-montserrat mt-1">
+                  ℹ️ This project will be assigned to the selected developer and linked to their account for all reporting purposes.
                 </p>
               </div>
 
@@ -298,16 +298,16 @@ const AdminAddProject: React.FC = () => {
           </div>
 
           {/* Admin Notice */}
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
             <div className="flex items-start space-x-3">
-              <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center mt-0.5">
-                <User className="w-4 h-4 text-red-600" strokeWidth={1.5} />
+              <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
+                <User className="w-4 h-4 text-blue-600" strokeWidth={1.5} />
               </div>
               <div>
-                <h4 className="font-bold text-red-800 font-montserrat mb-1">Admin Override Notice</h4>
-                <p className="text-sm text-red-700 font-montserrat">
-                  You are creating this project as an Admin on behalf of the selected Developer. 
-                  The project will be assigned to their account but marked as Admin-created for audit purposes.
+                <h4 className="font-bold text-blue-800 font-montserrat mb-1">Project Assignment Notice</h4>
+                <p className="text-sm text-blue-700 font-montserrat">
+                  This project will be created and assigned to the selected Developer's account. 
+                  All project data, units, and reporting will be linked to the Developer for proper attribution.
                 </p>
               </div>
             </div>

@@ -128,6 +128,42 @@ const AdminProjects: React.FC = () => {
 
       {/* Projects List */}
       <div className="px-4 py-6 pb-24">
+        {/* Add New Project Section */}
+        <div className="bg-white rounded-xl shadow-sm border border-neutral-100 p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mr-3">
+                <Plus className="w-5 h-5 text-green-600" strokeWidth={1.5} />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-neutral-800 font-montserrat">Add New Project</h3>
+                <p className="text-sm text-neutral-500 font-montserrat">Create projects on behalf of developers</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => navigate('/admin/projects/add')}
+              className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg font-medium font-montserrat hover:bg-primary-700 transition-colors"
+            >
+              <Plus className="w-4 h-4 mr-2" strokeWidth={1.5} />
+              Create Project
+            </button>
+          </div>
+          
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="flex items-start space-x-3">
+              <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
+                <Building className="w-4 h-4 text-blue-600" strokeWidth={1.5} />
+              </div>
+              <div>
+                <h4 className="font-bold text-blue-800 font-montserrat mb-1">Admin Project Creation</h4>
+                <p className="text-sm text-blue-700 font-montserrat">
+                  As an Admin, you can create projects on behalf of any Developer. The project will be assigned to the selected Developer's account and remain linked for all reporting purposes.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="mb-4">
           <span className="text-sm text-neutral-600 font-montserrat">
             {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''} found
