@@ -1,7 +1,7 @@
 # Property Agent - Admin Interface Development Prompt
 
 ## Project Overview
-You are building a comprehensive Admin Interface for the Property Agent application - a real estate platform that connects agents, developers, and buyers. The admin interface provides system administrators with complete control over user management, system monitoring, and platform configuration.
+You are building a comprehensive Admin Interface for the Property Agent application - a real estate platform that connects agents, developers, and buyers. The admin interface provides system administrators with complete superuser control over user management, project oversight, lead management, and platform configuration.
 
 ## Current Implementation Status
 
@@ -60,13 +60,197 @@ You are building a comprehensive Admin Interface for the Property Agent applicat
 - **Security Settings**: Password change, 2FA setup, session management
 - **Quick Actions**: Links to user management, audit logs, system settings
 
+### 🚀 **Enhanced Superuser Functionality Requirements**
+
+## Admin Role Responsibilities & Privileges
+
+### 👥 **User Management (Enhanced)**
+**Current Status**: ✅ Fully Implemented
+- View all users (Developers, Agents, Buyers) with comprehensive filtering
+- Edit/update user details with form validation
+- Activate/deactivate accounts with confirmation dialogs
+- Reset passwords with email notifications
+- Role management with audit trail
+
+### 🏗️ **Property / Project Management (New)**
+**Status**: 🔄 Needs Implementation
+
+#### **Project Oversight** (`/admin/projects`)
+- **View All Projects**: Complete list of projects created by all developers
+- **Project Details**: Name, location, description, pricing, status
+- **Developer Association**: Clear indication of which developer owns each project
+- **Project Status Management**: Ability to change project status (Planning, Under Construction, Ready, Completed)
+- **Project Search & Filtering**: By developer, location, status, date range
+
+#### **Project Edit Functionality** (`/admin/projects/:projectId/edit`)
+- **Edit Project Details**: Name, location, description, pricing
+- **Status Override**: Admin can override project status if needed
+- **Developer Reassignment**: Ability to reassign project to different developer (with audit trail)
+- **Project Visibility Control**: Make projects public/private/draft
+
+#### **Unit Management** (`/admin/projects/:projectId/units`)
+- **Unit Listings Overview**: All units within a project
+- **Unit Status Management**: Override unit status (Available, Reserved, Sold, Blocked)
+- **Unit Details Edit**: Update unit details if inconsistencies exist
+- **Bulk Unit Operations**: Mark multiple units with same status
+- **Unit Availability Grid**: Visual grid showing unit status by floor
+- **Conflict Resolution**: Tools to resolve unit booking conflicts
+
+### 📊 **Leads & Bookings Oversight (New)**
+**Status**: 🔄 Needs Implementation
+
+#### **Leads Management** (`/admin/leads`)
+- **View All Leads**: Complete system-wide lead visibility
+- **Advanced Filtering**:
+  - By Agent (assigned agent)
+  - By Developer (project developer)
+  - By Project (specific project interest)
+  - By Status (New, Contacted, Qualified, Converted, Lost)
+  - By Lead Quality (Hot, Warm, Cold)
+  - By Date Range
+- **Lead Details**: Contact info, preferences, interaction history
+- **Lead Reassignment**: Transfer leads between agents
+- **Lead Status Override**: Admin can update lead status
+- **Bulk Lead Operations**: Assign multiple leads to agents
+
+#### **Bookings Management** (`/admin/bookings`)
+- **Booking Overview**: All bookings across the platform
+- **Booking Status Monitoring**:
+  - Initiated (booking started)
+  - Token Paid (initial payment made)
+  - Confirmed (booking confirmed)
+  - Agreement Signed (legal documents completed)
+  - Cancelled (booking cancelled)
+- **Buyer Details**: Complete buyer information and contact details
+- **Token Amount Tracking**: Payment amounts and schedules
+- **Conflict Resolution Tools**:
+  - Reassign booking to different agent
+  - Reassign booking to different developer
+  - Resolve buyer-agent-developer conflicts
+  - Override booking status if needed
+
+#### **Lead-Booking Analytics** (`/admin/analytics`)
+- **Conversion Metrics**: Lead to booking conversion rates
+- **Agent Performance**: Leads handled vs bookings closed
+- **Developer Performance**: Project interest vs actual bookings
+- **Revenue Tracking**: Total booking values and payment status
+
+### 🎨 **Enhanced UI Layout**
+
+#### **Dashboard Home** (`/admin/dashboard`)
+**Current**: ✅ Implemented with basic stats
+**Enhancement Needed**: 🔄 Add project and booking metrics
+
+- **Summary Cards**:
+  - Total Users (Agents, Developers, Buyers) ✅
+  - Total Projects (by status) 🆕
+  - Total Leads (by quality/status) 🆕
+  - Total Bookings (by status) 🆕
+  - Revenue Metrics 🆕
+- **Quick Actions**: Enhanced with project and booking management
+- **Recent Activity**: Include project updates and booking activities
+
+#### **Navigation Structure**
+**Current**: Users, Logs, Settings, Profile
+**Enhanced**: Users, Projects, Leads, Bookings, Analytics, Logs, Settings, Profile
+
+#### **Users Section** (`/admin/users`)
+**Status**: ✅ Fully Implemented
+- List + filters by role (Developer, Agent, Buyer)
+- Search and advanced filtering
+- User management actions
+
+#### **Projects Section** (`/admin/projects`) 🆕
+**Status**: 🔄 Needs Implementation
+- **Project List**: All projects with developer info
+- **Project Filters**: By developer, status, location
+- **Drill-down Capability**: Click project → view units
+- **Unit Management**: Visual unit grid with status indicators
+- **Project Actions**: Edit, Status Change, Developer Reassignment
+
+#### **Leads & Bookings Section** (`/admin/leads`, `/admin/bookings`) 🆕
+**Status**: 🔄 Needs Implementation
+- **Tabbed Interface**: Leads tab and Bookings tab
+- **Data Tables**: Sortable, filterable tables
+- **Action Buttons**: Reassign, Update Status, View Details
+- **Bulk Operations**: Select multiple items for bulk actions
+- **Search & Filters**: Global search with advanced filtering
+
+### 🔧 **Technical Implementation Requirements**
+
+#### **New Routes Needed**:
+```
+/admin/projects              - Project list and management
+/admin/projects/:projectId   - Project details
+/admin/projects/:projectId/edit - Edit project
+/admin/projects/:projectId/units - Unit management
+/admin/leads                 - Lead management
+/admin/leads/:leadId         - Lead details
+/admin/bookings              - Booking management
+/admin/bookings/:bookingId   - Booking details
+/admin/analytics             - Analytics dashboard
+```
+
+#### **New Components Needed**:
+- `ProjectManagement` - Project list and filtering
+- `ProjectDetails` - Individual project view
+- `UnitGrid` - Visual unit availability grid
+- `LeadManagement` - Lead list and assignment tools
+- `BookingManagement` - Booking oversight and conflict resolution
+- `AdminAnalytics` - Metrics and reporting dashboard
+- `BulkActions` - Multi-select and bulk operation tools
+
+#### **Enhanced Data Structures**:
+```typescript
+interface AdminProject {
+  id: string;
+  name: string;
+  developer: Developer;
+  location: string;
+  status: ProjectStatus;
+  totalUnits: number;
+  availableUnits: number;
+  soldUnits: number;
+  revenue: string;
+  createdAt: string;
+}
+
+interface AdminLead {
+  id: string;
+  name: string;
+  contact: string;
+  assignedAgent?: Agent;
+  interestedProject?: Project;
+  status: LeadStatus;
+  quality: LeadQuality;
+  lastInteraction: string;
+}
+
+interface AdminBooking {
+  id: string;
+  buyer: Buyer;
+  agent: Agent;
+  developer: Developer;
+  project: Project;
+  unit: Unit;
+  status: BookingStatus;
+  tokenAmount: string;
+  totalAmount: string;
+  bookingDate: string;
+}
+```
+
 ### 🎨 **Design System**
 
 #### **Color Scheme**
 - **Primary**: Teal/Green (`primary-600: #016A5D`)
 - **Admin Accent**: Red (`red-600`) for admin-specific elements
 - **Gold Accent**: `#CBA135` for highlights
-- **Neutral**: Gray scale for backgrounds and text
+- **Status Colors**: 
+  - Green for active/available/confirmed
+  - Yellow for pending/reserved/in-progress
+  - Red for inactive/sold/cancelled
+  - Blue for new/draft states
 
 #### **Typography**
 - **Font Family**: Montserrat (Google Fonts)
@@ -75,145 +259,76 @@ You are building a comprehensive Admin Interface for the Property Agent applicat
 
 #### **Component Patterns**
 - **Cards**: White background, rounded-xl, shadow-sm, border
-- **Buttons**: Rounded-lg, proper hover states, transition-colors
-- **Forms**: Neutral-50 backgrounds, rounded-xl inputs, focus rings
-- **Navigation**: Bottom navigation with role-specific items
+- **Tables**: Sortable headers, row hover states, action buttons
+- **Filters**: Dropdown filters with clear/reset options
+- **Status Badges**: Color-coded status indicators
+- **Action Buttons**: Consistent button styles with icons
 
-### 🔧 **Technical Architecture**
+### 🔐 **Security & Permissions**
 
-#### **Routing Structure**
-```
-/admin/dashboard          - Main admin dashboard
-/admin/users             - All users management
-/admin/agents            - Agent-specific user management
-/admin/developers        - Developer-specific user management  
-/admin/buyers            - Buyer-specific user management
-/admin/users/:userId     - Individual user details
-/admin/users/:userId/edit - Edit user information
-/admin/logs              - Audit logs and system monitoring
-/admin/settings          - System configuration
-/admin/profile           - Admin profile management
-```
+#### **Admin Privileges**:
+- **Read Access**: All data across the platform
+- **Edit Access**: User details, project information, unit status
+- **Override Access**: Status changes, reassignments, conflict resolution
+- **Audit Trail**: All admin actions logged with full details
 
-#### **Component Architecture**
-- **RoleBasedLayout**: Wrapper component handling role-specific navigation
-- **AdminBottomNavigation**: Admin-specific bottom navigation
-- **Role Switcher**: Development tool for testing different user roles
-- **Responsive Design**: Mobile-first approach with proper breakpoints
+#### **Intervention Rights**:
+- **User Management**: Full CRUD operations
+- **Project Oversight**: Edit details, change status, reassign ownership
+- **Lead Management**: Reassign agents, update status, resolve conflicts
+- **Booking Management**: Status override, reassignment, conflict resolution
 
-#### **State Management**
-- **React Hooks**: useState, useEffect for local state
-- **URL-based State**: useLocation, useParams for navigation state
-- **Mock Data**: Comprehensive mock data structure for development
+#### **Operational Boundaries**:
+- **Not for Daily Operations**: Admin is for oversight and fixing, not regular transactions
+- **Intervention Focus**: Conflict resolution and system maintenance
+- **Audit Everything**: All admin actions must be logged and traceable
 
-### 📊 **Data Structure**
+### 📱 **Mobile Responsiveness**
+- **Dashboard**: Responsive cards and metrics
+- **Tables**: Horizontal scroll on mobile with essential columns
+- **Filters**: Collapsible filter panels
+- **Actions**: Touch-friendly buttons and menus
 
-#### **User Management**
-```typescript
-interface AdminUser {
-  id: string;
-  name: string;
-  email: string;
-  role: 'agent' | 'developer' | 'buyer';
-  status: 'active' | 'suspended' | 'inactive';
-  lastLogin: string;
-  joinedDate: string;
-  region?: string;
-}
-```
+### 🚀 **Implementation Priority**
 
-#### **Admin Statistics**
-```typescript
-interface AdminStats {
-  totalUsers: number;
-  agents: number;
-  activeAgents: number;
-  developers: number;
-  activeDevelopers: number;
-  buyers: number;
-  activeBuyers: number;
-  suspendedUsers: number;
-  newUsersThisMonth: number;
-}
-```
+#### **Phase 1**: Project Management
+1. Admin project list and details
+2. Project editing capabilities
+3. Unit management interface
 
-#### **Audit Logs**
-```typescript
-interface AuditLog {
-  id: string;
-  action: 'suspend' | 'reactivate' | 'reset' | 'edit' | 'view';
-  description: string;
-  targetUser: string;
-  adminUser: string;
-  timestamp: string;
-  ipAddress?: string;
-  details?: string;
-}
-```
+#### **Phase 2**: Lead & Booking Oversight
+1. Lead management interface
+2. Booking oversight dashboard
+3. Reassignment and conflict resolution tools
 
-## 🎯 **Development Guidelines**
+#### **Phase 3**: Analytics & Reporting
+1. Admin analytics dashboard
+2. Performance metrics
+3. Revenue tracking
 
-### **Code Quality Standards**
-1. **TypeScript**: Strict typing for all components and data structures
-2. **Component Structure**: Functional components with proper prop typing
-3. **Error Handling**: Comprehensive error boundaries and user feedback
-4. **Performance**: Optimized rendering with proper key props and memoization
-5. **Accessibility**: WCAG 2.1 compliance with proper ARIA labels
+#### **Phase 4**: Enhanced Features
+1. Bulk operations
+2. Advanced filtering
+3. Export capabilities
 
-### **UI/UX Principles**
-1. **Consistency**: Uniform design patterns across all admin pages
-2. **Clarity**: Clear visual hierarchy and information organization
-3. **Efficiency**: Quick access to frequently used functions
-4. **Safety**: Confirmation dialogs for destructive actions
-5. **Feedback**: Clear success/error messages for all actions
+### 🎯 **Success Criteria**
 
-### **Security Considerations**
-1. **Role-based Access**: Proper permission checking for all admin functions
-2. **Audit Trail**: Complete logging of all administrative actions
-3. **Data Protection**: Secure handling of sensitive user information
-4. **Session Management**: Proper session timeout and security measures
+#### **Functional Requirements**:
+- Admin can view and manage all users, projects, leads, and bookings
+- Conflict resolution tools work effectively
+- All admin actions are logged and auditable
+- Search and filtering provide quick access to information
 
-### **Mobile Responsiveness**
-1. **Breakpoints**: Mobile-first design with proper responsive breakpoints
-2. **Touch Targets**: Appropriate button sizes for mobile interaction
-3. **Navigation**: Mobile-optimized navigation patterns
-4. **Performance**: Fast loading on mobile networks
+#### **Performance Requirements**:
+- Dashboard loads within 2 seconds
+- Search results appear within 1 second
+- Large data tables paginate efficiently
+- Mobile interface remains responsive
 
-## 🚀 **Future Enhancements**
+#### **Security Requirements**:
+- All admin actions require authentication
+- Sensitive operations require confirmation
+- Complete audit trail maintained
+- Role-based access controls enforced
 
-### **Planned Features**
-1. **Advanced Analytics**: User behavior analytics and system performance metrics
-2. **Bulk Operations**: Multi-select and bulk actions for user management
-3. **Export Functionality**: CSV/PDF export for audit logs and user data
-4. **Real-time Notifications**: Live updates for system events
-5. **Advanced Filtering**: More granular filtering options for all data views
-
-### **Integration Points**
-1. **Database Integration**: Supabase integration with RLS policies
-2. **Authentication**: Supabase Auth integration with role-based access
-3. **File Storage**: Document and image upload functionality
-4. **Email Service**: Automated email notifications for admin actions
-
-## 📝 **Implementation Notes**
-
-### **Current Mock Data**
-- All functionality currently uses comprehensive mock data
-- Data structures are designed to match future database schema
-- Realistic data volumes for testing (1000+ users, detailed logs)
-
-### **Navigation Behavior**
-- Role switcher in top-right for development/testing
-- Bottom navigation with admin-specific red theme
-- Proper back button navigation throughout the interface
-
-### **Form Handling**
-- Pre-populated forms with current data
-- Proper validation and error handling
-- Success/error feedback for all operations
-
-### **Search and Filtering**
-- Real-time search with debouncing
-- Multiple filter combinations
-- Clear filter states and reset options
-
-This admin interface provides a solid foundation for system administration with room for future enhancements and integrations.
+This enhanced Admin Interface provides comprehensive superuser functionality while maintaining the clean, professional design and robust security measures of the existing system.
