@@ -1,9 +1,10 @@
 import React from 'react';
 import { LayoutDashboard, Building, Users, FileText, Settings } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const DeveloperBottomNavigation: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/developer/dashboard', active: location.pathname === '/developer/dashboard' },
@@ -17,9 +18,9 @@ const DeveloperBottomNavigation: React.FC = () => {
         {navItems.map((item) => {
           const Icon = item.icon;
           return (
-            <a
+            <button
               key={item.path}
-              href={item.path}
+              onClick={() => navigate(item.path)}
               className={`flex flex-col items-center py-2 px-3 rounded-lg transition-all duration-200 ${
                 item.active
                   ? 'text-primary-600'
@@ -28,7 +29,7 @@ const DeveloperBottomNavigation: React.FC = () => {
             >
               <Icon className="w-5 h-5 mb-1" strokeWidth={1.5} />
               <span className="text-xs font-medium font-montserrat">{item.label}</span>
-            </a>
+            </button>
           );
         })}
       </div>
