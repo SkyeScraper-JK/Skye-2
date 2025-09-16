@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Users, Activity, Settings, Shield } from 'lucide-react';
+import { LayoutDashboard, Users, Activity, Settings, Shield, Building } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 const AdminBottomNavigation: React.FC = () => {
