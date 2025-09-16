@@ -19,7 +19,8 @@ import AdminUserDetails from './pages/AdminUserDetails';
 import AdminUserEdit from './pages/AdminUserEdit';
 import AdminLogs from './pages/AdminLogs';
 import AdminSettings from './pages/AdminSettings';
-import AdminProfile from './pages/AdminProfile';
+import AdminProjects from './pages/AdminProjects';
+import AdminLeadsBookings from './pages/AdminLeadsBookings';
 import DeveloperSettings from './pages/DeveloperSettings';
 
 function App() {

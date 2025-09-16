@@ -8,9 +8,9 @@ const AdminBottomNavigation: React.FC = () => {
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard', active: location.pathname === '/admin/dashboard' },
     { icon: Users, label: 'Users', path: '/admin/users', active: location.pathname === '/admin/users' },
-    { icon: Activity, label: 'Logs', path: '/admin/logs', active: location.pathname === '/admin/logs' },
+    { icon: Building, label: 'Projects', path: '/admin/projects', active: location.pathname.startsWith('/admin/projects') },
+    { icon: Activity, label: 'Leads', path: '/admin/leads-bookings', active: location.pathname.startsWith('/admin/leads') },
     { icon: Settings, label: 'Settings', path: '/admin/settings', active: location.pathname === '/admin/settings' },
-    { icon: Shield, label: 'Profile', path: '/admin/profile', active: location.pathname === '/admin/profile' },
   ];
 
   return (
