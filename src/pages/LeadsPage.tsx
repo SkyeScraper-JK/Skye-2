@@ -346,196 +346,26 @@ const LeadsPage: React.FC = () => {
 
               {/* Action Buttons */}
               <div className="flex space-x-2">
-                <button
-                  onClick={() => {
-                    setSelectedLead(lead.id);
-                    setShowAddNote(true);
-                  }}
-                  className="flex-1 bg-primary-50 text-primary-600 py-2 px-3 rounded-lg text-sm font-medium font-montserrat hover:bg-primary-100 transition-colors flex items-center justify-center"
-                >
-                  <Plus className="w-4 h-4 mr-1" strokeWidth={1.5} />
-                  Add Note
+                <button className="flex-1 bg-primary-600 text-white py-2 px-3 rounded-lg text-sm font-medium font-montserrat hover:bg-primary-700 transition-colors flex items-center justify-center">
+                  <Phone className="w-4 h-4 mr-1" strokeWidth={1.5} />
+                  Call
                 </button>
-                <button
-                  onClick={() => {
-                    setSelectedLead(lead.id);
-                    setShowAddReminder(true);
-                  }}
-                  className="flex-1 bg-accent-gold/10 text-accent-gold py-2 px-3 rounded-lg text-sm font-medium font-montserrat hover:bg-accent-gold/20 transition-colors flex items-center justify-center"
-                >
-                  <Clock className="w-4 h-4 mr-1" strokeWidth={1.5} />
-                  Reminder
+                <button className="flex-1 bg-neutral-100 text-neutral-700 py-2 px-3 rounded-lg text-sm font-medium font-montserrat hover:bg-neutral-200 transition-colors flex items-center justify-center">
+                  <MessageCircle className="w-4 h-4 mr-1" strokeWidth={1.5} />
+                  Message
                 </button>
-                <button
+                <button 
                   onClick={() => navigate(`/leads/${lead.id}`)}
-                  className="bg-neutral-100 text-neutral-600 py-2 px-3 rounded-lg text-sm font-medium font-montserrat hover:bg-neutral-200 transition-colors flex items-center justify-center"
+                  className="flex-1 bg-accent-gold text-white py-2 px-3 rounded-lg text-sm font-medium font-montserrat hover:bg-accent-gold/90 transition-colors flex items-center justify-center"
                 >
-                  <Eye className="w-4 h-4" strokeWidth={1.5} />
+                  <Eye className="w-4 h-4 mr-1" strokeWidth={1.5} />
+                  View
                 </button>
               </div>
             </div>
           ))}
         </div>
-
-        {filteredLeads.length === 0 && (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Search className="w-8 h-8 text-neutral-400" strokeWidth={1.5} />
-            </div>
-            <h3 className="text-lg font-medium text-neutral-800 font-montserrat mb-2">No leads found</h3>
-            <p className="text-neutral-500 font-montserrat">
-              {searchTerm || activeFilter !== 'All Stages' || statusFilter !== 'All Status'
-                ? 'Try adjusting your filters or search terms'
-                : 'Start by adding your first lead'}
-            </p>
-          </div>
-        )}
       </div>
-
-      {/* Add Note Modal */}
-      {showAddNote && selectedLead && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h3 className="text-lg font-bold text-neutral-800 font-montserrat mb-4">Add Note</h3>
-            <textarea
-              value={newNote}
-              onChange={(e) => setNewNote(e.target.value)}
-              placeholder="Enter your note..."
-              className="w-full p-3 border border-neutral-200 rounded-lg font-montserrat resize-none h-32 focus:ring-2 focus:ring-primary-600 focus:border-transparent"
-            />
-            <div className="flex space-x-3 mt-4">
-              <button
-                onClick={() => {
-                  setShowAddNote(false);
-                  setNewNote('');
-                  setSelectedLead(null);
-                }}
-                className="flex-1 py-2 px-4 bg-neutral-100 text-neutral-600 rounded-lg font-medium font-montserrat hover:bg-neutral-200 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => handleAddNote(selectedLead)}
-                className="flex-1 py-2 px-4 bg-primary-600 text-white rounded-lg font-medium font-montserrat hover:bg-primary-700 transition-colors"
-              >
-                Add Note
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Add Reminder Modal */}
-      {showAddReminder && selectedLead && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h3 className="text-lg font-bold text-neutral-800 font-montserrat mb-4">Add Reminder</h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 font-montserrat mb-2">
-                  Reminder Type
-                </label>
-                <select
-                  value={newReminder.type}
-                  onChange={(e) => setNewReminder({...newReminder, type: e.target.value as 'call' | 'email' | 'meeting' | 'follow-up'})}
-                  className="w-full p-3 border border-neutral-200 rounded-lg font-montserrat focus:ring-2 focus:ring-primary-600 focus:border-transparent"
-                >
-                  <option value="call">Phone Call</option>
-                  <option value="email">Email</option>
-                  <option value="meeting">Meeting</option>
-                  <option value="follow-up">Follow-up</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 font-montserrat mb-2">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  value={newReminder.title}
-                  onChange={(e) => setNewReminder({...newReminder, title: e.target.value})}
-                  placeholder="Reminder title..."
-                  className="w-full p-3 border border-neutral-200 rounded-lg font-montserrat focus:ring-2 focus:ring-primary-600 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 font-montserrat mb-2">
-                  Description
-                </label>
-                <textarea
-                  value={newReminder.description}
-                  onChange={(e) => setNewReminder({...newReminder, description: e.target.value})}
-                  placeholder="Additional details..."
-                  className="w-full p-3 border border-neutral-200 rounded-lg font-montserrat resize-none h-20 focus:ring-2 focus:ring-primary-600 focus:border-transparent"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 font-montserrat mb-2">
-                    Date
-                  </label>
-                  <input
-                    type="date"
-                    value={newReminder.dueDate}
-                    onChange={(e) => setNewReminder({...newReminder, dueDate: e.target.value})}
-                    className="w-full p-3 border border-neutral-200 rounded-lg font-montserrat focus:ring-2 focus:ring-primary-600 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 font-montserrat mb-2">
-                    Time
-                  </label>
-                  <input
-                    type="time"
-                    value={newReminder.dueTime}
-                    onChange={(e) => setNewReminder({...newReminder, dueTime: e.target.value})}
-                    className="w-full p-3 border border-neutral-200 rounded-lg font-montserrat focus:ring-2 focus:ring-primary-600 focus:border-transparent"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 font-montserrat mb-2">
-                  Priority
-                </label>
-                <select
-                  value={newReminder.priority}
-                  onChange={(e) => setNewReminder({...newReminder, priority: e.target.value as 'low' | 'medium' | 'high'})}
-                  className="w-full p-3 border border-neutral-200 rounded-lg font-montserrat focus:ring-2 focus:ring-primary-600 focus:border-transparent"
-                >
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                </select>
-              </div>
-            </div>
-            <div className="flex space-x-3 mt-6">
-              <button
-                onClick={() => {
-                  setShowAddReminder(false);
-                  setNewReminder({
-                    type: 'call',
-                    title: '',
-                    description: '',
-                    dueDate: '',
-                    dueTime: '',
-                    priority: 'medium'
-                  });
-                  setSelectedLead(null);
-                }}
-                className="flex-1 py-2 px-4 bg-neutral-100 text-neutral-600 rounded-lg font-medium font-montserrat hover:bg-neutral-200 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => handleAddReminder(selectedLead)}
-                className="flex-1 py-2 px-4 bg-primary-600 text-white rounded-lg font-medium font-montserrat hover:bg-primary-700 transition-colors"
-              >
-                Add Reminder
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <AgentBottomNavigation />
     </RoleBasedLayout>
@@ -543,3 +373,4 @@ const LeadsPage: React.FC = () => {
 };
 
 export default LeadsPage;
+                      
