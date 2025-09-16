@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, Filter, Building, MapPin, Calendar, Users, TrendingUp, Edit, Eye, Grid3X3 } from 'lucide-react';
+import { ArrowLeft, Search, Filter, Building, MapPin, Calendar, Users, TrendingUp, Edit, Eye, Grid3X3, Plus } from 'lucide-react';
 import { mockProjects, mockDevelopers } from '../data/mockData';
 import RoleBasedLayout from '../components/RoleBasedLayout';
 import { mockAdminUser } from '../data/mockData';
@@ -56,27 +56,29 @@ const AdminProjects: React.FC = () => {
       <div className="bg-white border-b border-neutral-100 sticky top-0 z-40">
         <div className="px-4 py-4">
           <div className="flex items-center justify-between mb-4">
-            <button 
-              onClick={() => navigate('/admin/dashboard')}
-              className="p-2 rounded-lg hover:bg-neutral-100 transition-colors mr-3"
-            >
-              <ArrowLeft className="w-5 h-5 text-neutral-600" />
-            </button>
-            
-            <div>
-              <h1 className="text-xl font-bold uppercase tracking-extra-wide text-primary-600 font-montserrat">
-                ADMIN DASHBOARD
-                <div className="w-16 h-0.5 bg-gradient-to-r from-accent-gold to-primary-600 mt-1 rounded-full"></div>
-              </h1>
-              <p className="text-sm text-neutral-500 font-montserrat">Project Management</p>
+            <div className="flex items-center">
+              <button 
+                onClick={() => navigate('/admin/dashboard')}
+                className="p-2 rounded-lg hover:bg-neutral-100 transition-colors mr-3"
+              >
+                <ArrowLeft className="w-5 h-5 text-neutral-600" />
+              </button>
+              
+              <div>
+                <h1 className="text-xl font-bold uppercase tracking-extra-wide text-primary-600 font-montserrat">
+                  ADMIN DASHBOARD
+                  <div className="w-16 h-0.5 bg-gradient-to-r from-accent-gold to-primary-600 mt-1 rounded-full"></div>
+                </h1>
+                <p className="text-sm text-neutral-500 font-montserrat">Project Management</p>
+              </div>
             </div>
             
             <button 
-              onClick={() => navigate('/admin/projects/add')}
-              className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg font-medium font-montserrat hover:bg-red-700 transition-colors"
+              onClick={() => navigate('/admin/projects/new')}
+              className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg font-medium font-montserrat hover:bg-primary-700 transition-colors"
             >
-              <Building className="w-4 h-4 mr-2" strokeWidth={1.5} />
-              Add Project
+              <Plus className="w-4 h-4 mr-2" strokeWidth={1.5} />
+              Add New Project
             </button>
           </div>
 

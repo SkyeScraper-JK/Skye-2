@@ -73,7 +73,7 @@ const AdminAddProject: React.FC = () => {
                 ADMIN DASHBOARD
                 <div className="w-16 h-0.5 bg-gradient-to-r from-accent-gold to-primary-600 mt-1 rounded-full"></div>
               </h1>
-              <p className="text-sm text-neutral-500 font-montserrat">Add New Project</p>
+              <p className="text-sm text-neutral-500 font-montserrat">Add New Project on Behalf of Developer</p>
             </div>
           </div>
         </div>
