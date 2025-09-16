@@ -64,7 +64,7 @@ function App() {
           <Route path="/admin/buyers" element={<AdminUsers />} />
           <Route path="/admin/projects/:projectId" element={<AdminProjectDetails />} />
           <Route path="/admin/projects/:projectId/units" element={<AdminUnitManagement />} />
-          <Route path="/admin/projects/new" element={<AdminAddProject />} />
+          <Route path="/admin/projects/add" element={<AdminAddProject />} />
           <Route path="/admin/bookings" element={<AdminBookings />} />
           <Route path="/admin/bookings/:bookingId" element={<AdminBookingDetails />} />
           <Route path="/admin/logs" element={<AdminLogs />} />
