@@ -55,7 +55,7 @@ const AdminProjects: React.FC = () => {
       {/* Header */}
       <div className="bg-white border-b border-neutral-100 sticky top-0 z-40">
         <div className="px-4 py-4">
-          <div className="flex items-center mb-4">
+          <div className="flex items-center justify-between mb-4">
             <button 
               onClick={() => navigate('/admin/dashboard')}
               className="p-2 rounded-lg hover:bg-neutral-100 transition-colors mr-3"
@@ -70,6 +70,14 @@ const AdminProjects: React.FC = () => {
               </h1>
               <p className="text-sm text-neutral-500 font-montserrat">Project Management</p>
             </div>
+            
+            <button 
+              onClick={() => navigate('/admin/projects/new')}
+              className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg font-medium font-montserrat hover:bg-red-700 transition-colors"
+            >
+              <Plus className="w-4 h-4 mr-2" strokeWidth={1.5} />
+              Add Project
+            </button>
           </div>
 
           {/* Search Bar */}

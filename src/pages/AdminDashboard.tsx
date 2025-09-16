@@ -166,11 +166,28 @@ const AdminDashboard: React.FC = () => {
               Leads & Bookings
             </button>
             <button 
+              onClick={() => navigate('/admin/projects')}
+              className="flex items-center justify-center p-4 bg-neutral-100 text-neutral-700 rounded-xl font-medium font-montserrat hover:bg-neutral-200 transition-colors"
+            >
+              <Building className="w-5 h-5 mr-2" strokeWidth={1.5} />
+              Manage Projects
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-3">
+            <button 
+              onClick={() => navigate('/admin/bookings')}
+              className="flex items-center justify-center p-4 bg-accent-gold text-white rounded-xl font-medium font-montserrat hover:bg-accent-gold-light transition-colors"
+            >
+              <TrendingUp className="w-5 h-5 mr-2" strokeWidth={1.5} />
+              Monitor Bookings
+            </button>
+            <button 
               onClick={() => navigate('/admin/logs')}
               className="flex items-center justify-center p-4 bg-neutral-100 text-neutral-700 rounded-xl font-medium font-montserrat hover:bg-neutral-200 transition-colors"
             >
               <Activity className="w-5 h-5 mr-2" strokeWidth={1.5} />
-              View Logs
+              Audit Logs
             </button>
           </div>
         </div>

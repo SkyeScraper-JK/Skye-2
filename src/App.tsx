@@ -24,9 +24,11 @@ import DeveloperSettings from './pages/DeveloperSettings';
 import AdminProjectDetails from './pages/AdminProjectDetails';
 import AdminUnitManagement from './pages/AdminUnitManagement';
 import AdminProjects from './pages/AdminProjects';
-import AdminLeadsBookings from './pages/AdminLeadsBookings';
 import AdminLeadDetails from './pages/AdminLeadDetails';
 import AdminBookingDetails from './pages/AdminBookingDetails';
+import AdminAddProject from './pages/AdminAddProject';
+import AdminLeads from './pages/AdminLeads';
+import AdminBookings from './pages/AdminBookings';
 
 function App() {
   return (
@@ -63,8 +65,11 @@ function App() {
           <Route path="/admin/buyers" element={<AdminUsers />} />
           <Route path="/admin/projects/:projectId" element={<AdminProjectDetails />} />
           <Route path="/admin/projects/:projectId/units" element={<AdminUnitManagement />} />
+          <Route path="/admin/projects/new" element={<AdminAddProject />} />
           <Route path="/admin/leads/:leadId" element={<AdminLeadDetails />} />
           <Route path="/admin/bookings/:bookingId" element={<AdminBookingDetails />} />
+          <Route path="/admin/leads" element={<AdminLeads />} />
+          <Route path="/admin/bookings" element={<AdminBookings />} />
           <Route path="/admin/logs" element={<AdminLogs />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
           <Route path="/admin/profile" element={<AdminProfile />} />
