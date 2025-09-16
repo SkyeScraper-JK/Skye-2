@@ -140,7 +140,7 @@ const AdminDashboard: React.FC = () => {
         <div className="mb-6">
           <h3 className="text-lg font-bold text-neutral-800 font-montserrat mb-4">Quick Actions</h3>
           
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 mb-4">
             <button 
               onClick={() => navigate('/admin/users')}
               className="flex items-center justify-center p-4 bg-primary-600 text-white rounded-xl font-medium font-montserrat hover:bg-primary-700 transition-colors"
@@ -149,8 +149,25 @@ const AdminDashboard: React.FC = () => {
               Manage Users
             </button>
             <button 
-              onClick={() => navigate('/admin/logs')}
+              onClick={() => navigate('/admin/projects')}
               className="flex items-center justify-center p-4 bg-white border border-neutral-200 text-neutral-700 rounded-xl font-medium font-montserrat hover:bg-neutral-50 transition-colors"
+            >
+              <Building className="w-5 h-5 mr-2" strokeWidth={1.5} />
+              Manage Projects
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-3">
+            <button 
+              onClick={() => navigate('/admin/leads-bookings')}
+              className="flex items-center justify-center p-4 bg-accent-gold text-white rounded-xl font-medium font-montserrat hover:bg-accent-gold-light transition-colors"
+            >
+              <TrendingUp className="w-5 h-5 mr-2" strokeWidth={1.5} />
+              Leads & Bookings
+            </button>
+            <button 
+              onClick={() => navigate('/admin/logs')}
+              className="flex items-center justify-center p-4 bg-neutral-100 text-neutral-700 rounded-xl font-medium font-montserrat hover:bg-neutral-200 transition-colors"
             >
               <Activity className="w-5 h-5 mr-2" strokeWidth={1.5} />
               View Logs
