@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Plus, Gift, Calendar, Building, Edit, Trash2, Eye, Users, Bell } from 'lucide-react';
 import { mockPromotions, mockProperties, mockAgentPropertyInterest } from '../data/mockData';
 import DeveloperBottomNavigation from '../components/DeveloperBottomNavigation';
@@ -8,9 +8,13 @@ import { mockCurrentUser, mockDeveloperProfile } from '../data/mockData';
 
 const DeveloperPromotions: React.FC = () => {
   const navigate = useNavigate();
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [searchParams] = useSearchParams();
+  const shouldShowCreateModal = searchParams.get('create') === 'true';
+  const preSelectedPropertyId = searchParams.get('propertyId') || '';
+  
+  const [showCreateModal, setShowCreateModal] = useState(shouldShowCreateModal);
   const [newPromotion, setNewPromotion] = useState({
-    propertyId: '',
+    propertyId: preSelectedPropertyId,
     title: '',
     message: '',
     offerDetails: '',
@@ -34,7 +38,7 @@ const DeveloperPromotions: React.FC = () => {
       console.log('Creating promotion:', newPromotion);
       // Here you would typically send to backend
       setNewPromotion({
-        propertyId: '',
+        propertyId: preSelectedPropertyId,
         title: '',
         message: '',
         offerDetails: '',
@@ -42,6 +46,8 @@ const DeveloperPromotions: React.FC = () => {
         validUntil: ''
       });
       setShowCreateModal(false);
+      // Clear URL parameters
+      navigate('/developer/promotions');
     }
   };
 

@@ -77,7 +77,7 @@ const ProjectDetailsPage: React.FC = () => {
               <Edit className="w-5 h-5 text-neutral-600" />
             </button>
             <button 
-              onClick={() => navigate(`/developer/promotions/create?propertyId=${projectId}`)}
+              onClick={() => navigate(`/developer/promotions?create=true&propertyId=${projectId}`)}
               className="p-2 rounded-lg hover:bg-neutral-100 transition-colors"
             >
               <Gift className="w-5 h-5 text-neutral-600" />
@@ -300,9 +300,16 @@ const ProjectDetailsPage: React.FC = () => {
         <div className="flex space-x-3 max-w-md mx-auto">
           <button 
             onClick={() => navigate(`/developer/projects/${project.id}/edit`)}
-            className="flex-1 bg-primary-600 text-white py-3 rounded-lg font-medium font-montserrat hover:bg-primary-700 transition-colors"
+            className="flex-1 bg-neutral-100 text-neutral-700 py-3 rounded-lg font-medium font-montserrat hover:bg-neutral-200 transition-colors"
           >
             Edit Project
+          </button>
+          <button 
+            onClick={() => navigate(`/developer/promotions?create=true&propertyId=${project.id}`)}
+            className="flex-1 bg-primary-600 text-white py-3 rounded-lg font-medium font-montserrat hover:bg-primary-700 transition-colors flex items-center justify-center"
+          >
+            <Gift className="w-5 h-5 mr-2" strokeWidth={1.5} />
+            Create Promotion
           </button>
           <button className="p-3 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors">
             <Phone className="w-5 h-5 text-neutral-600" strokeWidth={1.5} />
