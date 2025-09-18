@@ -1,16 +1,20 @@
 import React from 'react';
-import { Home, FileText, Calendar, MessageCircle, User } from 'lucide-react';
+import { Home, FileText, Calendar, MessageCircle, User, Bell } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { mockNotifications } from '../data/mockData';
 
 const AgentBottomNavigation: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const unreadCount = mockNotifications.filter(n => !n.isRead && n.targetRole === 'agent').length;
 
   const navItems = [
     { icon: Home, label: 'Home', path: '/', active: location.pathname === '/' },
     { icon: FileText, label: 'Leads', path: '/leads', active: location.pathname === '/leads' },
     { icon: Calendar, label: 'Bookings', path: '/bookings', active: location.pathname === '/bookings' },
     { icon: MessageCircle, label: 'Messages', path: '/messages', active: location.pathname === '/messages' },
+    { icon: Bell, label: 'Notifications', path: '/notifications', active: location.pathname === '/notifications', badge: unreadCount },
     { icon: User, label: 'Profile', path: '/profile', active: location.pathname === '/profile' },
   ];
 
@@ -23,7 +27,7 @@ const AgentBottomNavigation: React.FC = () => {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className={`flex flex-col items-center py-2 px-3 rounded-lg transition-all duration-200 ${
+              className={`relative flex flex-col items-center py-2 px-3 rounded-lg transition-all duration-200 ${
                 item.active
                   ? 'text-primary-600'
                   : 'text-neutral-500 hover:text-primary-600'
@@ -31,6 +35,11 @@ const AgentBottomNavigation: React.FC = () => {
             >
               <Icon className="w-5 h-5 mb-1" strokeWidth={1.5} />
               <span className="text-xs font-medium font-montserrat">{item.label}</span>
+              {item.badge && item.badge > 0 && (
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold font-montserrat rounded-full flex items-center justify-center">
+                  {item.badge > 9 ? '9+' : item.badge}
+                </div>
+              )}
             </button>
           );
         })}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Building, Users, FileText, Settings } from 'lucide-react';
+import { LayoutDashboard, Building, Users, FileText, Settings, Gift } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const DeveloperBottomNavigation: React.FC = () => {
@@ -9,6 +9,7 @@ const DeveloperBottomNavigation: React.FC = () => {
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/developer/dashboard', active: location.pathname === '/developer/dashboard' },
     { icon: Building, label: 'Projects', path: '/developer/projects', active: location.pathname.startsWith('/developer/projects') },
+    { icon: Gift, label: 'Promotions', path: '/developer/promotions', active: location.pathname.startsWith('/developer/promotions') },
     { icon: Settings, label: 'Settings', path: '/developer/settings', active: location.pathname.startsWith('/developer/settings') },
   ];
 

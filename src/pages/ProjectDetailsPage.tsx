@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Share, Heart, MapPin, Calendar, Building, Users, TrendingUp, Edit, Phone, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Share, Heart, MapPin, Calendar, Building, Users, TrendingUp, Edit, Phone, MessageCircle, Gift, Plus } from 'lucide-react';
 import { mockProjects } from '../data/mockData';
 import RoleBasedLayout from '../components/RoleBasedLayout';
 import { mockCurrentUser, mockDeveloperProfile } from '../data/mockData';
@@ -75,6 +75,12 @@ const ProjectDetailsPage: React.FC = () => {
           <div className="flex items-center space-x-2">
             <button className="p-2 rounded-lg hover:bg-neutral-100 transition-colors">
               <Edit className="w-5 h-5 text-neutral-600" />
+            </button>
+            <button 
+              onClick={() => navigate(`/developer/promotions/create?propertyId=${projectId}`)}
+              className="p-2 rounded-lg hover:bg-neutral-100 transition-colors"
+            >
+              <Gift className="w-5 h-5 text-neutral-600" />
             </button>
             <button className="p-2 rounded-lg hover:bg-neutral-100 transition-colors">
               <Share className="w-5 h-5 text-neutral-600" />

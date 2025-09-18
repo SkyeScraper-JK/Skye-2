@@ -31,6 +31,9 @@ import AdminLeads from './pages/AdminLeads';
 import AdminBookings from './pages/AdminBookings';
 import LeadDetailsPage from './pages/LeadDetailsPage';
 import BookingFormPage from './pages/BookingFormPage';
+import NotificationsPage from './pages/NotificationsPage';
+import PromotionsPage from './pages/PromotionsPage';
+import DeveloperPromotions from './pages/DeveloperPromotions';
 
 function App() {
   return (
@@ -47,6 +50,8 @@ function App() {
           <Route path="/bookings" element={<BookingsPage />} />
           <Route path="/property/:propertyId/book" element={<BookingFormPage />} />
           <Route path="/messages" element={<MessagesPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/promotions" element={<PromotionsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           
           {/* Developer Routes */}
@@ -55,6 +60,7 @@ function App() {
           <Route path="/developer/projects/new" element={<AddProject />} />
           <Route path="/developer/projects/:projectId" element={<ProjectDetailsPage />} />
           <Route path="/developer/projects/:projectId/edit" element={<EditProject />} />
+          <Route path="/developer/promotions" element={<DeveloperPromotions />} />
           <Route path="/developer/settings" element={<DeveloperSettings />} />
           
           {/* Admin Routes */}

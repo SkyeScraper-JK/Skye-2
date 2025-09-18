@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Share, Heart, MapPin, Calendar, Bed, Bath, Download, Grid3X3, Phone, MessageCircle } from 'lucide-react';
-import { getMockPropertyDetails } from '../data/mockData';
+import { ArrowLeft, Share, Heart, MapPin, Calendar, Bed, Bath, Download, Grid3X3, Phone, MessageCircle, Star, Bell, BellOff } from 'lucide-react';
+import { getMockPropertyDetails, mockAgentPropertyInterest } from '../data/mockData';
 import AgentBottomNavigation from '../components/AgentBottomNavigation';
 import RoleBasedLayout from '../components/RoleBasedLayout';
 import { mockCurrentUser } from '../data/mockData';
@@ -10,6 +10,13 @@ const PropertyDetailsPage: React.FC = () => {
   const { propertyId } = useParams<{ propertyId: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
+  const [isInterestedInPromoting, setIsInterestedInPromoting] = useState(
+    mockAgentPropertyInterest.some(
+      interest => interest.agentId === mockCurrentUser.id && 
+                 interest.propertyId === propertyId && 
+                 interest.isInterested
+    )
+  );
   
   const property = getMockPropertyDetails(propertyId!);
 
@@ -52,6 +59,12 @@ const PropertyDetailsPage: React.FC = () => {
 
   const handleAvailabilityClick = () => {
     navigate(`/property/${propertyId}/availability`);
+  };
+
+  const handlePromotionToggle = () => {
+    setIsInterestedInPromoting(!isInterestedInPromoting);
+    // Here you would typically update the backend
+    console.log(`Agent ${isInterestedInPromoting ? 'opted out of' : 'opted in for'} promoting property ${propertyId}`);
   };
 
   return (
@@ -136,6 +149,40 @@ const PropertyDetailsPage: React.FC = () => {
           <div className="flex items-center">
             <Calendar className="w-4 h-4 mr-2 text-neutral-400" strokeWidth={1.5} />
             <span className="font-montserrat">{property.propertyType}</span>
+          </div>
+        </div>
+
+        {/* Agent Promotion Interest Toggle */}
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                {isInterestedInPromoting ? (
+                  <Bell className="w-5 h-5 text-blue-600" strokeWidth={1.5} />
+                ) : (
+                  <BellOff className="w-5 h-5 text-blue-600" strokeWidth={1.5} />
+                )}
+              </div>
+              <div>
+                <h4 className="font-bold text-blue-800 font-montserrat">Promote This Property</h4>
+                <p className="text-sm text-blue-700 font-montserrat">
+                  {isInterestedInPromoting 
+                    ? 'You\'ll receive notifications about offers and promotions'
+                    : 'Get notified about special offers and promotions'
+                  }
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handlePromotionToggle}
+              className={`w-12 h-6 rounded-full transition-colors ${
+                isInterestedInPromoting ? 'bg-primary-600' : 'bg-neutral-300'
+              }`}
+            >
+              <div className={`w-5 h-5 bg-white rounded-full shadow-sm transition-transform mt-0.5 ${
+                isInterestedInPromoting ? 'translate-x-6' : 'translate-x-0.5'
+              }`}></div>
+            </button>
           </div>
         </div>
       </div>

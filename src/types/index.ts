@@ -300,3 +300,39 @@ export interface AuditLog {
   ipAddress?: string;
   details?: string;
 }
+
+export interface Notification {
+  id: string;
+  type: 'new_property' | 'promotion' | 'system' | 'booking' | 'lead';
+  title: string;
+  message: string;
+  data?: any;
+  isRead: boolean;
+  createdAt: string;
+  targetRole?: 'agent' | 'developer' | 'admin';
+  propertyId?: string;
+  promotionId?: string;
+}
+
+export interface AgentPropertyInterest {
+  id: string;
+  agentId: string;
+  propertyId: string;
+  isInterested: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Promotion {
+  id: string;
+  developerId: string;
+  propertyId: string;
+  title: string;
+  message: string;
+  offerDetails: string;
+  validFrom: string;
+  validUntil: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}

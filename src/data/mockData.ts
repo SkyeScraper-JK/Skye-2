@@ -974,3 +974,105 @@ export const mockAuditLogs = [
     details: 'Account suspended pending review of reported listing violations'
   }
 ];
+
+// Notifications Mock Data
+export const mockNotifications = [
+  {
+    id: '1',
+    type: 'new_property' as const,
+    title: 'New Property Added',
+    message: 'Godrej Meridien Phase 2 is now available for promotion',
+    data: { propertyId: '1', developerName: 'Godrej Properties' },
+    isRead: false,
+    createdAt: '2024-12-15 10:30:00',
+    targetRole: 'agent' as const,
+    propertyId: '1'
+  },
+  {
+    id: '2',
+    type: 'promotion' as const,
+    title: 'Special Offer Available',
+    message: 'Limited time offer: 5% discount on DLF The Crest',
+    data: { promotionId: '1', propertyId: '3' },
+    isRead: false,
+    createdAt: '2024-12-15 08:15:00',
+    targetRole: 'agent' as const,
+    propertyId: '3',
+    promotionId: '1'
+  },
+  {
+    id: '3',
+    type: 'promotion' as const,
+    title: 'Early Bird Offer',
+    message: 'Get 2% additional discount for bookings this month',
+    data: { promotionId: '2', propertyId: '2' },
+    isRead: true,
+    createdAt: '2024-12-14 16:20:00',
+    targetRole: 'agent' as const,
+    propertyId: '2',
+    promotionId: '2'
+  }
+];
+
+// Agent Property Interest Mock Data
+export const mockAgentPropertyInterest = [
+  {
+    id: '1',
+    agentId: '1',
+    propertyId: '1',
+    isInterested: true,
+    createdAt: '2024-12-10 14:30:00',
+    updatedAt: '2024-12-10 14:30:00'
+  },
+  {
+    id: '2',
+    agentId: '1',
+    propertyId: '3',
+    isInterested: true,
+    createdAt: '2024-12-12 09:15:00',
+    updatedAt: '2024-12-12 09:15:00'
+  }
+];
+
+// Promotions Mock Data
+export const mockPromotions = [
+  {
+    id: '1',
+    developerId: '2',
+    propertyId: '3',
+    title: 'Limited Time Offer - DLF The Crest',
+    message: 'Special discount for early bookings! Get 5% off on all units.',
+    offerDetails: '5% discount on base price + Free car parking + Modular kitchen included',
+    validFrom: '2024-12-15',
+    validUntil: '2024-12-31',
+    isActive: true,
+    createdAt: '2024-12-15 08:00:00',
+    updatedAt: '2024-12-15 08:00:00'
+  },
+  {
+    id: '2',
+    developerId: '1',
+    propertyId: '2',
+    title: 'Early Bird Special - Godrej Park Avenue',
+    message: 'Book now and save! Limited period offer for first 50 bookings.',
+    offerDetails: '2% additional discount + Free registration + 1 year maintenance free',
+    validFrom: '2024-12-14',
+    validUntil: '2024-12-28',
+    isActive: true,
+    createdAt: '2024-12-14 16:00:00',
+    updatedAt: '2024-12-14 16:00:00'
+  },
+  {
+    id: '3',
+    developerId: '1',
+    propertyId: '1',
+    title: 'Festive Offer - Godrej Meridien',
+    message: 'Celebrate the season with exclusive benefits on premium units.',
+    offerDetails: 'Free club membership + Premium fixtures + Extended warranty',
+    validFrom: '2024-12-01',
+    validUntil: '2024-12-25',
+    isActive: true,
+    createdAt: '2024-12-01 10:00:00',
+    updatedAt: '2024-12-01 10:00:00'
+  }
+];

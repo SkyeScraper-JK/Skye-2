@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Search, Filter, Grid3X3, List } from 'lucide-react';
+import { ArrowLeft, Plus, Search, Filter, Grid3X3, List, Gift } from 'lucide-react';
 import { mockProjects } from '../data/mockData';
 import ProjectCard from '../components/ProjectCard';
 import DeveloperBottomNavigation from '../components/DeveloperBottomNavigation';
@@ -61,6 +61,12 @@ const DeveloperProjects: React.FC = () => {
                   <List className="w-5 h-5 text-neutral-600" strokeWidth={1.5} /> :
                   <Grid3X3 className="w-5 h-5 text-neutral-600" strokeWidth={1.5} />
                 }
+              </button>
+              <button 
+                onClick={() => navigate('/developer/promotions')}
+                className="p-2 rounded-lg hover:bg-neutral-100 transition-colors"
+              >
+                <Gift className="w-5 h-5 text-neutral-600" strokeWidth={1.5} />
               </button>
               <button 
                 onClick={() => navigate('/developer/projects/new')}
