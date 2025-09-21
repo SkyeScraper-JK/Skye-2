@@ -75,6 +75,8 @@ function App() {
           <Route path="/admin/projects/:projectId" element={<AdminProjectDetails />} />
           <Route path="/admin/projects/:projectId/units" element={<AdminUnitManagement />} />
           <Route path="/admin/projects/add" element={<AdminAddProject />} />
+          <Route path="/admin/leads" element={<AdminLeads />} />
+          <Route path="/admin/leads/:leadId" element={<AdminLeadDetails />} />
           <Route path="/admin/bookings" element={<AdminBookings />} />
           <Route path="/admin/bookings/:bookingId" element={<AdminBookingDetails />} />
           <Route path="/admin/logs" element={<AdminLogs />} />
