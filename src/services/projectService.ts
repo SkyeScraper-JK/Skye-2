@@ -34,9 +34,11 @@ export interface ParsedProject {
 }
 
 export const createProject = async (projectData: CreateProjectData, parsedProjects: ParsedProject[]) => {
+  let currentUser = null;
+  
   try {
     // Get current user for authentication
-    const currentUser = await getCurrentUser();
+    currentUser = await getCurrentUser();
     if (!currentUser) {
       throw new Error('User not authenticated. Please log in and try again.');
     }
@@ -186,7 +188,7 @@ export const createProject = async (projectData: CreateProjectData, parsedProjec
     console.error('Project creation error:', error);
     
     // Log the error
-    if (projectData.excelFile && currentUser && currentUser.id) {
+    if (projectData.excelFile && currentUser?.id) {
       await supabase
         .from('upload_logs')
         .insert({
