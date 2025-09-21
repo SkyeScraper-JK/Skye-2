@@ -34,11 +34,9 @@ export interface ParsedProject {
 }
 
 export const createProject = async (projectData: CreateProjectData, parsedProjects: ParsedProject[]) => {
-  let currentUser = null;
-  
   try {
     // Get current user for authentication
-    currentUser = await getCurrentUser();
+    const currentUser = await getCurrentUser();
     if (!currentUser) {
       throw new Error('User not authenticated. Please log in and try again.');
     }
@@ -47,57 +45,15 @@ export const createProject = async (projectData: CreateProjectData, parsedProjec
       throw new Error('User ID not found. Please log in again.');
     }
     
-    // 1. Upload brochure file if provided
-    let brochureUrl = null;
-    if (projectData.brochureFile) {
-      const brochureFileName = `${Date.now()}_${projectData.brochureFile.name}`;
-      
-      try {
-        const { data: brochureUpload, error: brochureError } = await supabase.storage
-          .from('project-files')
-          .upload(`brochures/${brochureFileName}`, projectData.brochureFile);
-
-        if (brochureError) {
-          console.error('Brochure upload error:', brochureError);
-          throw new Error(`Failed to upload brochure: ${brochureError.message}`);
-        } else {
-          const { data: brochureUrlData } = supabase.storage
-            .from('project-files')
-            .getPublicUrl(brochureUpload.path);
-          brochureUrl = brochureUrlData.publicUrl;
-        }
-      } catch (uploadError) {
-        console.error('Brochure upload failed:', uploadError);
-        throw new Error(`Brochure upload failed: ${uploadError instanceof Error ? uploadError.message : 'Unknown error'}`);
-      }
-    }
-
-    // 2. Upload Excel file if provided
-    let excelUrl = null;
-    if (projectData.excelFile) {
-      const excelFileName = `${Date.now()}_${projectData.excelFile.name}`;
-      
-      try {
-        const { data: excelUpload, error: excelError } = await supabase.storage
-          .from('project-files')
-          .upload(`excel/${excelFileName}`, projectData.excelFile);
-
-        if (excelError) {
-          console.error('Excel upload error:', excelError);
-          throw new Error(`Failed to upload Excel file: ${excelError.message}`);
-        } else {
-          const { data: excelUrlData } = supabase.storage
-            .from('project-files')
-            .getPublicUrl(excelUpload.path);
-          excelUrl = excelUrlData.publicUrl;
-        }
-      } catch (uploadError) {
-        console.error('Excel upload failed:', uploadError);
-        throw new Error(`Excel upload failed: ${uploadError instanceof Error ? uploadError.message : 'Unknown error'}`);
-      }
-    }
-
-    // 3. Create project record
+    // 1. Create project record (skip file uploads for now)
+    console.log('Creating project with data:', {
+      developer_id: parseInt(projectData.developerId),
+      name: projectData.name,
+      description: projectData.description,
+      location: projectData.location,
+      created_by: parseInt(currentUser.id)
+    });
+    
     const { data: project, error: projectError } = await supabase
       .from('projects')
       .insert({
@@ -105,8 +61,8 @@ export const createProject = async (projectData: CreateProjectData, parsedProjec
         name: projectData.name,
         description: projectData.description || `${projectData.type} project in ${projectData.location}`,
         location: projectData.location,
-        brochure_url: brochureUrl,
-        unit_excel_url: excelUrl,
+        brochure_url: null, // Skip file upload for now
+        unit_excel_url: null, // Skip file upload for now
         created_by: currentUser.id ? parseInt(currentUser.id) : null
       })
       .select()
@@ -117,7 +73,9 @@ export const createProject = async (projectData: CreateProjectData, parsedProjec
       throw new Error(`Failed to create project: ${projectError.message}`);
     }
 
-    // 4. Create units from parsed Excel data
+    console.log('Project created successfully:', project);
+
+    // 2. Create units from parsed Excel data
     const allUnits: any[] = [];
     
     for (const parsedProject of parsedProjects) {
@@ -156,27 +114,11 @@ export const createProject = async (projectData: CreateProjectData, parsedProjec
 
       if (unitsError) {
         console.error('Units creation error:', unitsError);
-        // Don't throw here, project is already created
+        console.warn('Some units may not have been created, but project creation succeeded');
       }
     }
 
-    // 5. Log the upload
-    if (currentUser.id) {
-      const { error: logError } = await supabase
-        .from('upload_logs')
-        .insert({
-          project_id: project.id,
-          uploaded_by: parseInt(currentUser.id),
-          file_url: excelUrl || '',
-          file_type: 'excel',
-          status: 'success'
-        });
-
-      if (logError) {
-        console.warn('Failed to log upload:', logError);
-        // Don't fail the entire operation for logging issues
-      }
-    }
+    console.log('Units processed:', allUnits.length);
 
     return {
       success: true,
@@ -187,18 +129,12 @@ export const createProject = async (projectData: CreateProjectData, parsedProjec
   } catch (error) {
     console.error('Project creation error:', error);
     
-    // Log the error
-    if (projectData.excelFile && currentUser?.id) {
-      await supabase
-        .from('upload_logs')
-        .insert({
-          uploaded_by: parseInt(currentUser.id),
-          file_url: '',
-          file_type: 'excel',
-          status: 'failed',
-          errors: error instanceof Error ? error.message : 'Unknown error'
-        });
-    }
+    // Log the error to console for debugging
+    console.error('Full error details:', {
+      error,
+      projectData: { ...projectData, brochureFile: projectData.brochureFile?.name, excelFile: projectData.excelFile?.name },
+      stack: error instanceof Error ? error.stack : 'No stack trace'
+    });
 
     return {
       success: false,

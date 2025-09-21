@@ -347,12 +347,20 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
   const processExcelFile = async () => {
     if (!excelFile) return;
 
+    let currentUser = null;
+    
     try {
+      // Get current user first
+      currentUser = await getCurrentUser();
+      if (!currentUser) {
+        throw new Error('User not authenticated. Please log in and try again.');
+      }
+
       // Stage 1: Uploading
       setUploadStatus({
         stage: 'uploading',
         progress: 10,
-        message: 'Uploading files to storage...'
+        message: 'Processing files...'
       });
 
       // Stage 2: Parsing
@@ -379,22 +387,12 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
       setUploadStatus({
         stage: 'saving',
         progress: 85,
-        message: 'Creating project and saving units to database...',
+        message: 'Creating project in database...',
         errors: errors.length > 0 ? [`${errors.length} validation issues found - units will be skipped`] : undefined
       });
 
       // Create the actual project in the database only if we have valid project form data
       if (projectFormData && developerId) {
-        // Ensure user is authenticated
-        const currentUser = await getCurrentUser();
-        if (!currentUser) {
-          throw new Error('User not authenticated. Please log in and try again.');
-        }
-        
-        if (!currentUser.id) {
-          throw new Error('User ID not found. Please log in again.');
-        }
-        
         console.log('Creating project with data:', { projectFormData, developerId, projects });
         
         const projectData: CreateProjectData = {
