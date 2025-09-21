@@ -1,12 +1,21 @@
 import React, { useState, useCallback } from 'react';
 import { Upload, FileSpreadsheet, FileText, CheckCircle, AlertCircle, X, Download, RefreshCw } from 'lucide-react';
 import * as XLSX from 'xlsx';
+import { createProject, CreateProjectData } from '../services/projectService';
 
 interface ExcelUploadSystemProps {
   projectId?: string;
   developerId?: string;
   onUploadComplete?: (data: any) => void;
   isAdmin?: boolean;
+  projectFormData?: {
+    name: string;
+    location: string;
+    type: string;
+    status: string;
+    amenities: string[];
+    description?: string;
+  };
 }
 
 interface UploadStatus {
@@ -52,7 +61,8 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
   projectId,
   developerId,
   onUploadComplete,
-  isAdmin = false
+  isAdmin = false,
+  projectFormData
 }) => {
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>({
     stage: 'idle',
@@ -341,10 +351,8 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
       setUploadStatus({
         stage: 'uploading',
         progress: 10,
-        message: 'Reading Excel file...'
+        message: 'Uploading files to storage...'
       });
-
-      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Stage 2: Parsing
       setUploadStatus({
@@ -356,8 +364,6 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
       const projects = await parseExcelFile(excelFile);
       setParsedData(projects);
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
       // Stage 3: Validating
       setUploadStatus({
         stage: 'validating',
@@ -368,17 +374,34 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
       const errors = validateUnits(projects);
       setValidationErrors(errors);
 
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
       // Stage 4: Saving
       setUploadStatus({
         stage: 'saving',
         progress: 85,
-        message: 'Saving validated units to database...'
+        message: 'Creating project and saving units to database...'
       });
 
-      // Here you would typically save to your backend
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Create the actual project in the database
+      if (projectFormData && developerId) {
+        const projectData: CreateProjectData = {
+          name: projectFormData.name,
+          location: projectFormData.location,
+          type: projectFormData.type,
+          status: projectFormData.status,
+          developerId: developerId,
+          amenities: projectFormData.amenities,
+          description: projectFormData.description,
+          brochureFile: brochureFile,
+          excelFile: excelFile,
+          createdBy: isAdmin ? '1' : undefined // Mock admin ID for now
+        };
+
+        const result = await createProject(projectData, projects);
+        
+        if (!result.success) {
+          throw new Error('Failed to create project in database');
+        }
+      }
 
       // Calculate summary
       const totalUnits = projects.reduce((sum, project) => sum + project.units.length, 0);
@@ -388,7 +411,7 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
       setUploadStatus({
         stage: 'complete',
         progress: 100,
-        message: 'Upload completed successfully!',
+        message: 'Project created successfully!',
         summary: {
           totalUnits,
           processed: processedUnits,
@@ -403,7 +426,8 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
           projects,
           unitsProcessed: processedUnits,
           unitsSkipped: errors.length,
-          errors
+          errors,
+          success: true
         });
       }
 
@@ -412,7 +436,7 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
       setUploadStatus({
         stage: 'error',
         progress: 0,
-        message: 'Failed to process Excel file. Please check the format and try again.',
+        message: error instanceof Error ? error.message : 'Failed to create project. Please try again.',
         errors: [error instanceof Error ? error.message : 'Unknown error occurred']
       });
     }
@@ -788,7 +812,7 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
                 className="flex-1 flex items-center justify-center py-3 px-4 bg-green-600 text-white rounded-lg font-medium font-montserrat hover:bg-green-700 transition-colors"
               >
                 <CheckCircle className="w-5 h-5 mr-2" strokeWidth={1.5} />
-                Continue
+                Complete
               </button>
             </>
           )}

@@ -264,6 +264,7 @@ const AddProject: React.FC = () => {
               developerId={mockDeveloperProfile.id}
               onUploadComplete={handleUploadComplete}
               isAdmin={false}
+              projectFormData={formData}
             />
 
             {/* Back Button */}
