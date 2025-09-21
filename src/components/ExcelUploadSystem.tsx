@@ -348,6 +348,7 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
     if (!excelFile) return;
 
     let currentUser = null;
+    let result: any = null;
     
     try {
       // Get current user first
@@ -408,7 +409,7 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
           createdBy: isAdmin && currentUser.id ? currentUser.id : undefined
         };
 
-        const result = await createProject(projectData, projects);
+        result = await createProject(projectData, projects);
         console.log('Project creation result:', result);
         
         if (!result || !result.success) {
@@ -445,7 +446,7 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
             unitsProcessed: processedUnits,
             unitsSkipped: errors.length,
             errors,
-            success: true,
+            success: result?.success || false,
             createdProject: result.project
           });
         }
