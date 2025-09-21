@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Search, Filter, Grid3X3, List, Gift } from 'lucide-react';
-import { mockProjects } from '../data/mockData';
+import { mockProjects, mockDevelopers } from '../data/mockData';
 import ProjectCard from '../components/ProjectCard';
 import DeveloperBottomNavigation from '../components/DeveloperBottomNavigation';
 import RoleBasedLayout from '../components/RoleBasedLayout';
 import { mockCurrentUser, mockDeveloperProfile } from '../data/mockData';
+import { supabase } from '../lib/supabase';
 
 const DeveloperProjects: React.FC = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [projects, setProjects] = useState(mockProjects);
+  const [loading, setLoading] = useState(false);
   
   // Create a developer user for the layout
   const developerUser = {
@@ -22,7 +25,57 @@ const DeveloperProjects: React.FC = () => {
 
   const statusOptions = ['All', 'Planning', 'Under Construction', 'Ready', 'Completed'];
 
-  const filteredProjects = mockProjects.filter(project => {
+  // Load projects from database
+  React.useEffect(() => {
+    const loadProjects = async () => {
+      setLoading(true);
+      try {
+        const { data: dbProjects, error } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('developer_id', 1); // Current developer ID
+
+        if (error) {
+          console.error('Error loading projects:', error);
+          // Fall back to mock data
+          setProjects(mockProjects);
+        } else if (dbProjects) {
+          // Transform database projects to match UI format
+          const transformedProjects = dbProjects.map(dbProject => ({
+            id: dbProject.id.toString(),
+            name: dbProject.name,
+            developerId: dbProject.developer_id.toString(),
+            location: dbProject.location,
+            type: 'Apartment' as const,
+            startingPrice: '₹1.2 Cr', // Default for now
+            possessionDate: 'Dec 2025', // Default for now
+            status: 'Under Construction' as const,
+            totalUnits: 120, // Default for now
+            availableUnits: 100, // Default for now
+            soldUnits: 15, // Default for now
+            heldUnits: 5, // Default for now
+            image: 'https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=800',
+            description: dbProject.description || 'Premium residential project',
+            amenities: ['Swimming Pool', 'Gym', 'Clubhouse'],
+            createdAt: dbProject.created_at || new Date().toISOString(),
+            updatedAt: dbProject.updated_at || new Date().toISOString()
+          }));
+          
+          // Combine with mock projects for demo
+          setProjects([...transformedProjects, ...mockProjects]);
+        }
+      } catch (error) {
+        console.error('Error loading projects:', error);
+        setProjects(mockProjects);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProjects();
+  }, []);
+
+  const filteredProjects = projects.filter(project => {
     const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          project.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'All' || project.status === statusFilter;
