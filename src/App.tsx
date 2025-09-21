@@ -44,11 +44,14 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/developer/:developerId" element={<DeveloperPropertiesPage />} />
           <Route path="/property/:propertyId" element={<PropertyDetailsPage />} />
+          <Route path="/project/:projectId" element={<PropertyDetailsPage />} />
           <Route path="/property/:propertyId/availability" element={<AvailabilityGridPage />} />
+          <Route path="/project/:projectId/availability" element={<AvailabilityGridPage />} />
           <Route path="/leads" element={<LeadsPage />} />
           <Route path="/leads/:leadId" element={<LeadDetailsPage />} />
           <Route path="/bookings" element={<BookingsPage />} />
           <Route path="/property/:propertyId/book" element={<BookingFormPage />} />
+          <Route path="/project/:projectId/book" element={<BookingFormPage />} />
           <Route path="/messages" element={<MessagesPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/promotions" element={<PromotionsPage />} />

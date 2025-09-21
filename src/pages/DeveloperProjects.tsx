@@ -177,9 +177,9 @@ const DeveloperProjects: React.FC = () => {
               <ProjectCard
                 key={project.id}
                 project={project}
-                onClick={() => navigate(`/developer/projects/${project.id}`)}
+                onClick={() => navigate(`/project/${project.id}`)}
                 showActions={true}
-                onEdit={() => navigate(`/developer/projects/${project.id}/edit`)}
+                onEdit={() => navigate(`/project/${project.id}/edit`)}
               />
             ))}
           </div>

@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Share, Heart, MapPin, Calendar, Building, Users, TrendingUp, Edit, Phone, MessageCircle, Gift, Plus } from 'lucide-react';
-import { mockProjects } from '../data/mockData';
+import { mockProjects, mockDevelopers } from '../data/mockData';
 import RoleBasedLayout from '../components/RoleBasedLayout';
 import { mockCurrentUser, mockDeveloperProfile } from '../data/mockData';
+import { supabase } from '../lib/supabase';
 
 const ProjectDetailsPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
-  
-  const project = mockProjects.find(p => p.id === projectId);
+  const [project, setProject] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   
   // Create a developer user for the layout
   const developerUser = {
@@ -19,19 +20,93 @@ const ProjectDetailsPage: React.FC = () => {
     profile: mockDeveloperProfile
   };
 
+  // Load project from database
+  React.useEffect(() => {
+    const loadProject = async () => {
+      setLoading(true);
+      try {
+        // First try to load from database
+        const { data: dbProject, error } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('id', projectId)
+          .single();
+
+        if (error || !dbProject) {
+          // Fall back to mock data
+          const mockProject = mockProjects.find(p => p.id === projectId);
+          if (mockProject) {
+            setProject(mockProject);
+          }
+        } else {
+          // Transform database project to match UI format
+          const developer = mockDevelopers.find(d => d.id === dbProject.developer_id.toString());
+          const transformedProject = {
+            id: dbProject.id.toString(),
+            name: dbProject.name,
+            developerId: dbProject.developer_id.toString(),
+            location: dbProject.location,
+            type: 'Apartment' as const,
+            startingPrice: '₹1.2 Cr',
+            possessionDate: 'Dec 2025',
+            status: 'Under Construction' as const,
+            totalUnits: 120,
+            availableUnits: 100,
+            soldUnits: 15,
+            heldUnits: 5,
+            image: 'https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=800',
+            description: dbProject.description || 'Premium residential project with world-class amenities',
+            amenities: ['Swimming Pool', 'Gym', 'Clubhouse', 'Garden', 'Security'],
+            createdAt: dbProject.created_at || new Date().toISOString(),
+            updatedAt: dbProject.updated_at || new Date().toISOString()
+          };
+          setProject(transformedProject);
+        }
+      } catch (error) {
+        console.error('Error loading project:', error);
+        // Fall back to mock data
+        const mockProject = mockProjects.find(p => p.id === projectId);
+        if (mockProject) {
+          setProject(mockProject);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (projectId) {
+      loadProject();
+    }
+  }, [projectId]);
+
+  if (loading) {
+    return (
+      <RoleBasedLayout user={developerUser} showRoleSwitcher={true}>
+        <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-neutral-600 font-montserrat">Loading project...</p>
+          </div>
+        </div>
+      </RoleBasedLayout>
+    );
+  }
+
   if (!project) {
     return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-bold text-neutral-800 mb-2">Project not found</h2>
-          <button 
-            onClick={() => navigate('/developer/projects')}
-            className="text-primary-600 hover:text-primary-700"
-          >
-            Go back to projects
-          </button>
+      <RoleBasedLayout user={developerUser} showRoleSwitcher={true}>
+        <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-xl font-bold text-neutral-800 mb-2">Project not found</h2>
+            <button 
+              onClick={() => navigate('/developer/projects')}
+              className="text-primary-600 hover:text-primary-700"
+            >
+              Go back to projects
+            </button>
+          </div>
         </div>
-      </div>
+      </RoleBasedLayout>
     );
   }
 

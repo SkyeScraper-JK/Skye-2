@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Share, Heart, MapPin, Calendar, Bed, Bath, Download, Grid3X3, Phone, MessageCircle, Star, Bell, BellOff } from 'lucide-react';
-import { getMockPropertyDetails, mockAgentPropertyInterest } from '../data/mockData';
+import { getMockPropertyDetails, mockAgentPropertyInterest, mockProjects, mockDevelopers } from '../data/mockData';
 import AgentBottomNavigation from '../components/AgentBottomNavigation';
 import RoleBasedLayout from '../components/RoleBasedLayout';
 import { mockCurrentUser } from '../data/mockData';
+import { supabase } from '../lib/supabase';
 
 const PropertyDetailsPage: React.FC = () => {
   const { propertyId } = useParams<{ propertyId: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
+  const [property, setProperty] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [isInterestedInPromoting, setIsInterestedInPromoting] = useState(
     mockAgentPropertyInterest.some(
       interest => interest.agentId === mockCurrentUser.id && 
@@ -18,21 +21,158 @@ const PropertyDetailsPage: React.FC = () => {
     )
   );
   
-  const property = getMockPropertyDetails(propertyId!);
+  // Load project from database or mock data
+  React.useEffect(() => {
+    const loadProperty = async () => {
+      setLoading(true);
+      try {
+        // First try to load from database
+        const { data: dbProject, error } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('id', propertyId)
+          .single();
+
+        if (error || !dbProject) {
+          // Fall back to mock data
+          const mockProperty = getMockPropertyDetails(propertyId!);
+          if (mockProperty) {
+            setProperty(mockProperty);
+          }
+        } else {
+          // Transform database project to property details format
+          const developer = mockDevelopers.find(d => d.id === dbProject.developer_id.toString());
+          const transformedProperty = {
+            id: dbProject.id.toString(),
+            name: dbProject.name,
+            developerId: dbProject.developer_id.toString(),
+            developer: developer?.name || 'Unknown Developer',
+            image: 'https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=800',
+            location: dbProject.location,
+            startingPrice: '₹1.2 Cr',
+            possessionDate: 'Dec 2025',
+            propertyType: 'Apartment' as const,
+            bedrooms: '2-4 BHK',
+            bathrooms: '2-3',
+            status: 'Available' as const,
+            highlights: ['Premium Location', 'Modern Amenities', 'Ready to Move'],
+            description: dbProject.description || 'Experience luxury living at its finest with world-class amenities, modern architecture, and prime location connectivity.',
+            amenities: [
+              'Swimming Pool',
+              'Gym & Fitness Center',
+              'Clubhouse',
+              'Children\'s Play Area',
+              'Landscaped Gardens',
+              'Security System',
+              '24/7 Power Backup',
+              'Parking Space'
+            ],
+            floorPlans: [
+              {
+                id: '1',
+                type: '2 BHK',
+                image: 'https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=400',
+                size: '1200 sq.ft'
+              },
+              {
+                id: '2',
+                type: '3 BHK',
+                image: 'https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=400',
+                size: '1650 sq.ft'
+              }
+            ],
+            brochures: [
+              {
+                id: '1',
+                name: 'Project Brochure',
+                url: '#'
+              },
+              {
+                id: '2',
+                name: 'Floor Plans',
+                url: '#'
+              },
+              {
+                id: '3',
+                name: 'Price List',
+                url: '#'
+              }
+            ],
+            units: [
+              { id: '101', unitNumber: 'A101', floor: 1, type: '2BHK', size: '1200 sq.ft', price: '₹1.2 Cr', status: 'Available' },
+              { id: '102', unitNumber: 'A102', floor: 1, type: '2BHK', size: '1200 sq.ft', price: '₹1.2 Cr', status: 'Held' },
+              { id: '103', unitNumber: 'A103', floor: 1, type: '3BHK', size: '1650 sq.ft', price: '₹1.8 Cr', status: 'Available' },
+              { id: '201', unitNumber: 'A201', floor: 2, type: '2BHK', size: '1200 sq.ft', price: '₹1.25 Cr', status: 'Sold' },
+              { id: '202', unitNumber: 'A202', floor: 2, type: '2BHK', size: '1200 sq.ft', price: '₹1.25 Cr', status: 'Available' },
+              { id: '203', unitNumber: 'A203', floor: 2, type: '3BHK', size: '1650 sq.ft', price: '₹1.85 Cr', status: 'Available' },
+              { id: '301', unitNumber: 'A301', floor: 3, type: '2BHK', size: '1200 sq.ft', price: '₹1.3 Cr', status: 'Available' },
+              { id: '302', unitNumber: 'A302', floor: 3, type: '2BHK', size: '1200 sq.ft', price: '₹1.3 Cr', status: 'Held' },
+              { id: '303', unitNumber: 'A303', floor: 3, type: '3BHK', size: '1650 sq.ft', price: '₹1.9 Cr', status: 'Available' },
+            ],
+            paymentPlans: [
+              {
+                id: '1',
+                name: 'Standard Plan',
+                downPayment: '20%',
+                installments: '70% in 24 months',
+                possessionPayment: '10%'
+              },
+              {
+                id: '2',
+                name: 'Flexi Plan',
+                downPayment: '10%',
+                installments: '80% in 36 months',
+                possessionPayment: '10%'
+              }
+            ]
+          };
+          setProperty(transformedProperty);
+        }
+      } catch (error) {
+        console.error('Error loading property:', error);
+        // Fall back to mock data
+        const mockProperty = getMockPropertyDetails(propertyId!);
+        if (mockProperty) {
+          setProperty(mockProperty);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (propertyId) {
+      loadProperty();
+    }
+  }, [propertyId]);
+
+  if (loading) {
+    return (
+      <RoleBasedLayout user={mockCurrentUser} showRoleSwitcher={true}>
+        <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-neutral-600 font-montserrat">Loading property...</p>
+          </div>
+        </div>
+      </RoleBasedLayout>
+    );
+  }
 
   if (!property) {
     return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-bold text-neutral-800 mb-2">Property not found</h2>
-          <button 
-            onClick={() => navigate(-1)}
-            className="text-primary-600 hover:text-primary-700"
-          >
-            Go back
-          </button>
+      <RoleBasedLayout user={mockCurrentUser} showRoleSwitcher={true}>
+        <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-xl font-bold text-neutral-800 mb-2">Property not found</h2>
+            <button 
+              onClick={() => navigate(-1)}
+              className="text-primary-600 hover:text-primary-700"
+            >
+              Go back
+            </button>
+          </div>
         </div>
-      </div>
+      </RoleBasedLayout>
     );
   }
 
