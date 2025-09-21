@@ -261,7 +261,7 @@ const AddProject: React.FC = () => {
 
             {/* Excel Upload System */}
             <ExcelUploadSystem
-              developerId={mockDeveloperProfile.id}
+              developerId="1"
               onUploadComplete={handleUploadComplete}
               isAdmin={false}
               projectFormData={formData}

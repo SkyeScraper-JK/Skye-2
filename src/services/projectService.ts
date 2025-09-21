@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { mockCurrentUser } from '../data/mockData';
 
 export interface CreateProjectData {
   name: string;
@@ -34,6 +35,9 @@ export interface ParsedProject {
 
 export const createProject = async (projectData: CreateProjectData, parsedProjects: ParsedProject[]) => {
   try {
+    // Get current user for authentication
+    const currentUser = mockCurrentUser; // In real app, get from auth context
+    
     // 1. Upload brochure file if provided
     let brochureUrl = null;
     if (projectData.brochureFile) {
@@ -74,13 +78,13 @@ export const createProject = async (projectData: CreateProjectData, parsedProjec
     const { data: project, error: projectError } = await supabase
       .from('projects')
       .insert({
-        developer_id: parseInt(projectData.developerId),
+        developer_id: parseInt(projectData.developerId) || parseInt(currentUser.id),
         name: projectData.name,
         description: projectData.description || `${projectData.type} project in ${projectData.location}`,
         location: projectData.location,
         brochure_url: brochureUrl,
         unit_excel_url: excelUrl,
-        created_by: projectData.createdBy ? parseInt(projectData.createdBy) : null
+        created_by: projectData.createdBy ? parseInt(projectData.createdBy) : parseInt(currentUser.id)
       })
       .select()
       .single();
@@ -133,15 +137,20 @@ export const createProject = async (projectData: CreateProjectData, parsedProjec
     }
 
     // 5. Log the upload
-    await supabase
+    const { error: logError } = await supabase
       .from('upload_logs')
       .insert({
         project_id: project.id,
-        uploaded_by: parseInt(projectData.developerId),
+        uploaded_by: parseInt(currentUser.id),
         file_url: excelUrl || '',
         file_type: 'excel',
         status: 'success'
       });
+
+    if (logError) {
+      console.warn('Failed to log upload:', logError);
+      // Don't fail the entire operation for logging issues
+    }
 
     return {
       success: true,

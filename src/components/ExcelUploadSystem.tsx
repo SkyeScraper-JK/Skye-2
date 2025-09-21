@@ -378,11 +378,14 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
       setUploadStatus({
         stage: 'saving',
         progress: 85,
-        message: 'Creating project and saving units to database...'
+        message: 'Creating project and saving units to database...',
+        errors: errors.length > 0 ? [`${errors.length} validation issues found - units will be skipped`] : undefined
       });
 
-      // Create the actual project in the database
+      // Create the actual project in the database only if we have valid project form data
       if (projectFormData && developerId) {
+        console.log('Creating project with data:', { projectFormData, developerId, projects });
+        
         const projectData: CreateProjectData = {
           name: projectFormData.name,
           location: projectFormData.location,
@@ -397,10 +400,14 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
         };
 
         const result = await createProject(projectData, projects);
+        console.log('Project creation result:', result);
         
         if (!result.success) {
-          throw new Error('Failed to create project in database');
+          throw new Error(`Failed to create project: ${result.error || 'Unknown error'}`);
         }
+      } else {
+        console.warn('Missing project form data or developer ID:', { projectFormData, developerId });
+        throw new Error('Missing required project information. Please go back and fill in all required fields.');
       }
 
       // Calculate summary
