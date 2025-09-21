@@ -4,12 +4,15 @@ import { ArrowLeft, Search, Filter, Building, MapPin, Calendar, Users, TrendingU
 import { mockProjects, mockDevelopers } from '../data/mockData';
 import RoleBasedLayout from '../components/RoleBasedLayout';
 import { mockAdminUser } from '../data/mockData';
+import { supabase } from '../lib/supabase';
 
 const AdminProjects: React.FC = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [developerFilter, setDeveloperFilter] = useState('All');
+  const [projects, setProjects] = useState(mockProjects);
+  const [loading, setLoading] = useState(false);
 
   const statusOptions = ['All', 'Planning', 'Under Construction', 'Ready', 'Completed'];
   const developerOptions = ['All', ...mockDevelopers.map(d => d.name)];
@@ -29,7 +32,55 @@ const AdminProjects: React.FC = () => {
     }
   };
 
-  const filteredProjects = mockProjects.filter(project => {
+  // Load projects from database
+  React.useEffect(() => {
+    const loadProjects = async () => {
+      setLoading(true);
+      try {
+        const { data: dbProjects, error } = await supabase
+          .from('projects')
+          .select('*');
+
+        if (error) {
+          console.error('Error loading projects:', error);
+          setProjects(mockProjects);
+        } else if (dbProjects) {
+          // Transform database projects to match UI format
+          const transformedProjects = dbProjects.map(dbProject => ({
+            id: dbProject.id.toString(),
+            name: dbProject.name,
+            developerId: dbProject.developer_id.toString(),
+            location: dbProject.location,
+            type: 'Apartment' as const,
+            startingPrice: '₹1.2 Cr',
+            possessionDate: 'Dec 2025',
+            status: 'Under Construction' as const,
+            totalUnits: 120,
+            availableUnits: 100,
+            soldUnits: 15,
+            heldUnits: 5,
+            image: 'https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=800',
+            description: dbProject.description || 'Premium residential project',
+            amenities: ['Swimming Pool', 'Gym', 'Clubhouse'],
+            createdAt: dbProject.created_at || new Date().toISOString(),
+            updatedAt: dbProject.updated_at || new Date().toISOString()
+          }));
+          
+          // Combine with mock projects for demo
+          setProjects([...transformedProjects, ...mockProjects]);
+        }
+      } catch (error) {
+        console.error('Error loading projects:', error);
+        setProjects(mockProjects);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProjects();
+  }, []);
+
+  const filteredProjects = projects.filter(project => {
     const developer = mockDevelopers.find(d => d.id === project.developerId);
     const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          project.location.toLowerCase().includes(searchTerm.toLowerCase());
