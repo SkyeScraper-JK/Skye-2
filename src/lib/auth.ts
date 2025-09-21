@@ -1,20 +1,7 @@
 import { supabase } from './supabase';
 
-// Generate consistent UUID for mock users
-const generateMockUUID = (userId: string): string => {
-  // Create a consistent UUID based on user ID
-  const mockUUIDs: { [key: string]: string } = {
-    '1': '00000000-0000-0000-0000-000000000001',
-    '2': '00000000-0000-0000-0000-000000000002',
-    '3': '00000000-0000-0000-0000-000000000003'
-  };
-  return mockUUIDs[userId] || '00000000-0000-0000-0000-000000000001';
-};
-
 // Set mock Supabase session
 export const setMockSupabaseSession = async (userId: string, email: string, role: string, name: string) => {
-  const mockUUID = generateMockUUID(userId);
-  
   // Create a mock session object
   const mockSession = {
     access_token: 'mock-jwt-token',
@@ -23,7 +10,7 @@ export const setMockSupabaseSession = async (userId: string, email: string, role
     expires_at: Math.floor(Date.now() / 1000) + 3600,
     token_type: 'bearer',
     user: {
-      id: mockUUID,
+      id: userId,
       email: email,
       user_metadata: {
         name: name,
