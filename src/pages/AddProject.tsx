@@ -60,7 +60,10 @@ const AddProject: React.FC = () => {
 
   const handleUploadComplete = (data: any) => {
     console.log('Project created with upload data:', { formData, uploadData: data });
-    navigate('/developer/projects');
+    // Navigate back to projects list to see the new project
+    setTimeout(() => {
+      navigate('/developer/projects');
+    }, 100);
   };
 
   return (

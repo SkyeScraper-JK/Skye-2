@@ -436,16 +436,20 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
         }
       });
 
-      if (onUploadComplete) {
-        onUploadComplete({
-          projectId,
-          projects,
-          unitsProcessed: processedUnits,
-          unitsSkipped: errors.length,
-          errors,
-          success: true
-        });
-      }
+      // Wait a moment for the database to update, then call completion callback
+      setTimeout(() => {
+        if (onUploadComplete) {
+          onUploadComplete({
+            projectId: result.project?.id,
+            projects,
+            unitsProcessed: processedUnits,
+            unitsSkipped: errors.length,
+            errors,
+            success: true,
+            createdProject: result.project
+          });
+        }
+      }, 500);
 
     } catch (error) {
       console.error('Excel processing error:', error);

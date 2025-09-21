@@ -54,7 +54,10 @@ const AdminAddProject: React.FC = () => {
 
   const handleUploadComplete = (data: any) => {
     console.log('Admin created project with upload data:', { formData, uploadData: data });
-    navigate('/admin/projects');
+    // Navigate back to projects list to see the new project
+    setTimeout(() => {
+      navigate('/admin/projects');
+    }, 100);
   };
 
   return (
