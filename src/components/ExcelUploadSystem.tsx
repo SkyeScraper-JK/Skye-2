@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Upload, FileSpreadsheet, FileText, CheckCircle, AlertCircle, X, Download, RefreshCw } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 interface ExcelUploadSystemProps {
   projectId?: string;
@@ -28,6 +29,25 @@ interface ValidationError {
   value: string;
 }
 
+interface ParsedUnit {
+  unitNumber: string;
+  floor: number;
+  type: string;
+  size: string;
+  price: string;
+  discountPrice?: string;
+  registrationFee?: string;
+  roiPercentage?: string;
+  paymentPlan?: string;
+  status: 'Available' | 'Held' | 'Sold';
+}
+
+interface ParsedProject {
+  name: string;
+  possessionDate?: string;
+  units: ParsedUnit[];
+}
+
 const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
   projectId,
   developerId,
@@ -43,6 +63,7 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
   const [excelFile, setExcelFile] = useState<File | null>(null);
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const [showErrorDetails, setShowErrorDetails] = useState(false);
+  const [parsedData, setParsedData] = useState<ParsedProject[]>([]);
 
   const handleBrochureUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -72,72 +93,327 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
     }
   }, []);
 
-  const simulateUploadProcess = async () => {
-    if (!excelFile) return;
+  const parseExcelFile = async (file: File): Promise<ParsedProject[]> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      
+      reader.onload = (e) => {
+        try {
+          const data = new Uint8Array(e.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const projects: ParsedProject[] = [];
 
-    // Stage 1: Uploading
-    setUploadStatus({
-      stage: 'uploading',
-      progress: 10,
-      message: 'Uploading files...'
+          workbook.SheetNames.forEach(sheetName => {
+            const worksheet = workbook.Sheets[sheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            
+            if (jsonData.length < 2) return; // Skip empty sheets
+            
+            // Extract project metadata from sheet name
+            const projectName = sheetName.includes(' - ') ? 
+              sheetName.split(' - ')[0] : sheetName;
+            const possessionDate = sheetName.includes(' - ') ? 
+              sheetName.split(' - ')[1] : undefined;
+
+            // Find header row (first row with data)
+            const headers = jsonData[0] as string[];
+            const dataRows = jsonData.slice(1) as any[][];
+
+            // Map column headers to our expected fields
+            const columnMap = mapColumns(headers);
+            
+            const units: ParsedUnit[] = [];
+            
+            dataRows.forEach((row, index) => {
+              if (!row || row.length === 0) return;
+              
+              try {
+                const unit = parseUnitRow(row, columnMap, index + 2);
+                if (unit) {
+                  units.push(unit);
+                }
+              } catch (error) {
+                console.warn(`Error parsing row ${index + 2}:`, error);
+              }
+            });
+
+            if (units.length > 0) {
+              projects.push({
+                name: projectName,
+                possessionDate,
+                units
+              });
+            }
+          });
+
+          resolve(projects);
+        } catch (error) {
+          reject(error);
+        }
+      };
+
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsArrayBuffer(file);
     });
+  };
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Stage 2: Parsing
-    setUploadStatus({
-      stage: 'parsing',
-      progress: 30,
-      message: 'Parsing Excel file and detecting structure...'
-    });
-
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Stage 3: Validating
-    setUploadStatus({
-      stage: 'validating',
-      progress: 60,
-      message: 'Validating unit data and pricing...'
-    });
-
-    // Simulate some validation errors
-    const mockErrors: ValidationError[] = [
-      { row: 15, column: 'price', error: 'Price per sq.ft seems unreasonable (₹45,000)', value: '₹54,00,000' },
-      { row: 23, column: 'unit_number', error: 'Duplicate unit number found', value: 'A-101' },
-      { row: 31, column: 'floor', error: 'Floor number inconsistent with unit number', value: '5' }
-    ];
-
-    setValidationErrors(mockErrors);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // Stage 4: Saving
-    setUploadStatus({
-      stage: 'saving',
-      progress: 85,
-      message: 'Saving validated units to database...'
-    });
-
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Stage 5: Complete
-    setUploadStatus({
-      stage: 'complete',
-      progress: 100,
-      message: 'Upload completed successfully!',
-      summary: {
-        totalUnits: 120,
-        processed: 117,
-        skipped: 3,
-        projects: 1
+  const mapColumns = (headers: string[]): Record<string, number> => {
+    const map: Record<string, number> = {};
+    
+    headers.forEach((header, index) => {
+      const normalizedHeader = header?.toString().toLowerCase().trim();
+      
+      // Unit number variations
+      if (['unit', 'unit no', 'unit number', 'unit_number', 'unitno'].includes(normalizedHeader)) {
+        map.unitNumber = index;
+      }
+      // Floor variations
+      else if (['floor', 'floor no', 'floor_no', 'floorno'].includes(normalizedHeader)) {
+        map.floor = index;
+      }
+      // Type variations
+      else if (['type', 'unit type', 'unit_type', 'configuration', 'config'].includes(normalizedHeader)) {
+        map.type = index;
+      }
+      // Size variations
+      else if (['size', 'area', 'sq ft', 'sqft', 'area_sqft', 'carpet area'].includes(normalizedHeader)) {
+        map.size = index;
+      }
+      // Price variations
+      else if (['price', 'base price', 'unit price', 'total price', 'amount'].includes(normalizedHeader)) {
+        map.price = index;
+      }
+      // Discount price
+      else if (['discount price', 'discounted price', 'offer price', 'special price'].includes(normalizedHeader)) {
+        map.discountPrice = index;
+      }
+      // Registration fee
+      else if (['registration fee', 'reg fee', 'registration', 'booking fee'].includes(normalizedHeader)) {
+        map.registrationFee = index;
+      }
+      // ROI percentage
+      else if (['roi', 'roi%', 'roi percentage', 'return', 'yield'].includes(normalizedHeader)) {
+        map.roiPercentage = index;
+      }
+      // Payment plan
+      else if (['payment plan', 'plan', 'payment_plan', 'payment scheme'].includes(normalizedHeader)) {
+        map.paymentPlan = index;
+      }
+      // Status
+      else if (['status', 'availability', 'unit status'].includes(normalizedHeader)) {
+        map.status = index;
       }
     });
+    
+    return map;
+  };
 
-    if (onUploadComplete) {
-      onUploadComplete({
-        projectId,
-        unitsProcessed: 117,
-        unitsSkipped: 3,
-        errors: mockErrors
+  const parseUnitRow = (row: any[], columnMap: Record<string, number>, rowNumber: number): ParsedUnit | null => {
+    const getValue = (key: string): string => {
+      const index = columnMap[key];
+      return index !== undefined ? (row[index]?.toString().trim() || '') : '';
+    };
+
+    const unitNumber = getValue('unitNumber');
+    const floorStr = getValue('floor');
+    const type = getValue('type');
+    const size = getValue('size');
+    const price = getValue('price');
+
+    // Skip rows with missing essential data
+    if (!unitNumber || !type || !price) {
+      return null;
+    }
+
+    // Parse floor number
+    let floor = 0;
+    if (floorStr) {
+      const floorMatch = floorStr.match(/\d+/);
+      floor = floorMatch ? parseInt(floorMatch[0]) : 0;
+    } else {
+      // Try to extract floor from unit number
+      const unitFloorMatch = unitNumber.match(/(\d+)/);
+      if (unitFloorMatch) {
+        const unitNum = parseInt(unitFloorMatch[0]);
+        floor = Math.floor(unitNum / 100); // Assuming format like A101, A201, etc.
+      }
+    }
+
+    // Parse status
+    const statusStr = getValue('status').toLowerCase();
+    let status: 'Available' | 'Held' | 'Sold' = 'Available';
+    if (statusStr.includes('held') || statusStr.includes('reserved')) {
+      status = 'Held';
+    } else if (statusStr.includes('sold') || statusStr.includes('booked')) {
+      status = 'Sold';
+    }
+
+    return {
+      unitNumber,
+      floor,
+      type,
+      size: size || 'N/A',
+      price,
+      discountPrice: getValue('discountPrice') || undefined,
+      registrationFee: getValue('registrationFee') || undefined,
+      roiPercentage: getValue('roiPercentage') || undefined,
+      paymentPlan: getValue('paymentPlan') || undefined,
+      status
+    };
+  };
+
+  const validateUnits = (projects: ParsedProject[]): ValidationError[] => {
+    const errors: ValidationError[] = [];
+    let rowCounter = 2; // Start from row 2 (after headers)
+
+    projects.forEach(project => {
+      const unitNumbers = new Set<string>();
+      
+      project.units.forEach((unit, index) => {
+        const currentRow = rowCounter + index;
+
+        // Check for duplicate unit numbers
+        if (unitNumbers.has(unit.unitNumber)) {
+          errors.push({
+            row: currentRow,
+            column: 'unit_number',
+            error: 'Duplicate unit number found',
+            value: unit.unitNumber
+          });
+        }
+        unitNumbers.add(unit.unitNumber);
+
+        // Validate price format and reasonability
+        const priceStr = unit.price.replace(/[₹,\s]/g, '');
+        const priceNum = parseFloat(priceStr);
+        if (isNaN(priceNum) || priceNum <= 0) {
+          errors.push({
+            row: currentRow,
+            column: 'price',
+            error: 'Invalid price format',
+            value: unit.price
+          });
+        } else if (priceNum > 100000000) { // 10 crores seems unreasonable
+          errors.push({
+            row: currentRow,
+            column: 'price',
+            error: 'Price seems unreasonably high',
+            value: unit.price
+          });
+        }
+
+        // Validate floor consistency with unit number
+        if (unit.floor > 0) {
+          const unitFloorFromNumber = Math.floor(parseInt(unit.unitNumber.replace(/\D/g, '')) / 100);
+          if (unitFloorFromNumber > 0 && unitFloorFromNumber !== unit.floor) {
+            errors.push({
+              row: currentRow,
+              column: 'floor',
+              error: 'Floor number inconsistent with unit number',
+              value: unit.floor.toString()
+            });
+          }
+        }
+
+        // Validate unit type
+        const validTypes = ['1BHK', '2BHK', '3BHK', '4BHK', '5BHK', 'Studio', 'Penthouse', 'Villa', 'Plot'];
+        if (!validTypes.some(type => unit.type.toLowerCase().includes(type.toLowerCase()))) {
+          errors.push({
+            row: currentRow,
+            column: 'type',
+            error: 'Unit type not recognized',
+            value: unit.type
+          });
+        }
+      });
+
+      rowCounter += project.units.length;
+    });
+
+    return errors;
+  };
+
+  const processExcelFile = async () => {
+    if (!excelFile) return;
+
+    try {
+      // Stage 1: Uploading
+      setUploadStatus({
+        stage: 'uploading',
+        progress: 10,
+        message: 'Reading Excel file...'
+      });
+
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Stage 2: Parsing
+      setUploadStatus({
+        stage: 'parsing',
+        progress: 30,
+        message: 'Parsing Excel file and detecting structure...'
+      });
+
+      const projects = await parseExcelFile(excelFile);
+      setParsedData(projects);
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Stage 3: Validating
+      setUploadStatus({
+        stage: 'validating',
+        progress: 60,
+        message: 'Validating unit data and pricing...'
+      });
+
+      const errors = validateUnits(projects);
+      setValidationErrors(errors);
+
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Stage 4: Saving
+      setUploadStatus({
+        stage: 'saving',
+        progress: 85,
+        message: 'Saving validated units to database...'
+      });
+
+      // Here you would typically save to your backend
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Calculate summary
+      const totalUnits = projects.reduce((sum, project) => sum + project.units.length, 0);
+      const processedUnits = totalUnits - errors.length;
+
+      // Stage 5: Complete
+      setUploadStatus({
+        stage: 'complete',
+        progress: 100,
+        message: 'Upload completed successfully!',
+        summary: {
+          totalUnits,
+          processed: processedUnits,
+          skipped: errors.length,
+          projects: projects.length
+        }
+      });
+
+      if (onUploadComplete) {
+        onUploadComplete({
+          projectId,
+          projects,
+          unitsProcessed: processedUnits,
+          unitsSkipped: errors.length,
+          errors
+        });
+      }
+
+    } catch (error) {
+      console.error('Excel processing error:', error);
+      setUploadStatus({
+        stage: 'error',
+        progress: 0,
+        message: 'Failed to process Excel file. Please check the format and try again.',
+        errors: [error instanceof Error ? error.message : 'Unknown error occurred']
       });
     }
   };
@@ -147,7 +423,7 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
       alert('Please select an Excel file to upload.');
       return;
     }
-    simulateUploadProcess();
+    processExcelFile();
   };
 
   const handleReset = () => {
@@ -156,6 +432,7 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
     setShowErrorDetails(false);
     setBrochureFile(null);
     setExcelFile(null);
+    setParsedData([]);
   };
 
   const downloadErrorReport = () => {
@@ -170,6 +447,22 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
     a.download = 'validation_errors.txt';
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const downloadSampleTemplate = () => {
+    // Create a sample Excel template
+    const sampleData = [
+      ['Unit Number', 'Floor', 'Type', 'Area (sq.ft)', 'Price', 'Discount Price', 'Registration Fee', 'ROI %', 'Payment Plan', 'Status'],
+      ['A101', '1', '2BHK', '1200', '₹1,20,00,000', '₹1,15,00,000', '₹2,00,000', '8.5', 'Standard', 'Available'],
+      ['A102', '1', '2BHK', '1200', '₹1,20,00,000', '', '₹2,00,000', '8.5', 'Standard', 'Available'],
+      ['A201', '2', '3BHK', '1650', '₹1,80,00,000', '₹1,70,00,000', '₹3,00,000', '9.2', 'Flexi', 'Available'],
+      ['A202', '2', '3BHK', '1650', '₹1,80,00,000', '', '₹3,00,000', '9.2', 'Standard', 'Held']
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(sampleData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sample Project - Q4 2025');
+    XLSX.writeFile(wb, 'PropertyAgent_Excel_Template.xlsx');
   };
 
   const getStageIcon = (stage: string) => {
@@ -246,11 +539,20 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
 
       {/* Excel Upload */}
       <div className="bg-white rounded-xl shadow-sm border border-neutral-100 p-6">
-        <div className="flex items-center mb-4">
-          <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mr-3">
-            <FileSpreadsheet className="w-5 h-5 text-green-600" strokeWidth={1.5} />
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mr-3">
+              <FileSpreadsheet className="w-5 h-5 text-green-600" strokeWidth={1.5} />
+            </div>
+            <h3 className="text-lg font-bold text-neutral-800 font-montserrat">Unit Inventory Excel</h3>
           </div>
-          <h3 className="text-lg font-bold text-neutral-800 font-montserrat">Unit Inventory Excel</h3>
+          <button
+            onClick={downloadSampleTemplate}
+            className="flex items-center text-primary-600 text-sm font-medium font-montserrat hover:text-primary-700"
+          >
+            <Download className="w-4 h-4 mr-1" strokeWidth={1.5} />
+            Download Template
+          </button>
         </div>
 
         <div className="border-2 border-dashed border-neutral-200 rounded-xl p-6 text-center mb-4">
@@ -367,6 +669,23 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
           </div>
         )}
 
+        {/* Error Display */}
+        {uploadStatus.stage === 'error' && uploadStatus.errors && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+            <div className="flex items-center mb-3">
+              <AlertCircle className="w-6 h-6 text-red-600 mr-2" strokeWidth={1.5} />
+              <h4 className="font-bold text-red-800 font-montserrat">Upload Failed</h4>
+            </div>
+            <div className="space-y-2">
+              {uploadStatus.errors.map((error, index) => (
+                <p key={index} className="text-sm text-red-700 font-montserrat">
+                  {error}
+                </p>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Validation Errors */}
         {validationErrors.length > 0 && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
@@ -414,6 +733,34 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
           </div>
         )}
 
+        {/* Parsed Data Preview */}
+        {parsedData.length > 0 && uploadStatus.stage === 'complete' && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+            <h4 className="font-bold text-blue-800 font-montserrat mb-3">Parsed Data Preview</h4>
+            <div className="space-y-3">
+              {parsedData.map((project, index) => (
+                <div key={index} className="bg-white rounded p-3 border border-blue-300">
+                  <div className="flex items-center justify-between mb-2">
+                    <h5 className="font-medium text-blue-800 font-montserrat">{project.name}</h5>
+                    <span className="text-xs text-blue-600 font-montserrat">
+                      {project.units.length} units
+                    </span>
+                  </div>
+                  {project.possessionDate && (
+                    <p className="text-xs text-blue-700 font-montserrat">
+                      Possession: {project.possessionDate}
+                    </p>
+                  )}
+                  <div className="mt-2 text-xs text-blue-600 font-montserrat">
+                    Sample units: {project.units.slice(0, 3).map(u => u.unitNumber).join(', ')}
+                    {project.units.length > 3 && '...'}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Action Buttons */}
         <div className="flex space-x-3">
           {uploadStatus.stage === 'idle' && (
@@ -437,7 +784,7 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
                 Upload More
               </button>
               <button
-                onClick={() => onUploadComplete?.({ success: true })}
+                onClick={() => onUploadComplete?.({ success: true, data: parsedData })}
                 className="flex-1 flex items-center justify-center py-3 px-4 bg-green-600 text-white rounded-lg font-medium font-montserrat hover:bg-green-700 transition-colors"
               >
                 <CheckCircle className="w-5 h-5 mr-2" strokeWidth={1.5} />
@@ -446,7 +793,17 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
             </>
           )}
           
-          {uploadStatus.stage !== 'idle' && uploadStatus.stage !== 'complete' && (
+          {uploadStatus.stage === 'error' && (
+            <button
+              onClick={handleReset}
+              className="flex-1 flex items-center justify-center py-3 px-4 bg-red-100 text-red-700 rounded-lg font-medium font-montserrat hover:bg-red-200 transition-colors"
+            >
+              <RefreshCw className="w-5 h-5 mr-2" strokeWidth={1.5} />
+              Try Again
+            </button>
+          )}
+          
+          {uploadStatus.stage !== 'idle' && uploadStatus.stage !== 'complete' && uploadStatus.stage !== 'error' && (
             <button
               disabled
               className="flex-1 flex items-center justify-center py-3 px-4 bg-neutral-100 text-neutral-500 rounded-lg font-medium font-montserrat cursor-not-allowed"
