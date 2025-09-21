@@ -298,6 +298,7 @@ const AdminAddProject: React.FC = () => {
               developerId={formData.developerId}
               onUploadComplete={handleUploadComplete}
               isAdmin={true}
+              projectFormData={formData}
             />
 
             {/* Back Button */}
