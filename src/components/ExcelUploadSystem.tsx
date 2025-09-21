@@ -391,6 +391,10 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
           throw new Error('User not authenticated. Please log in and try again.');
         }
         
+        if (!currentUser.id) {
+          throw new Error('User ID not found. Please log in again.');
+        }
+        
         console.log('Creating project with data:', { projectFormData, developerId, projects });
         
         const projectData: CreateProjectData = {
@@ -403,13 +407,13 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
           description: projectFormData.description,
           brochureFile: brochureFile,
           excelFile: excelFile,
-          createdBy: isAdmin ? currentUser.id : undefined
+          createdBy: isAdmin && currentUser.id ? currentUser.id : undefined
         };
 
         const result = await createProject(projectData, projects);
         console.log('Project creation result:', result);
         
-        if (!result.success) {
+        if (!result || !result.success) {
           throw new Error(`Failed to create project: ${result.error || 'Unknown error'}`);
         }
       } else {

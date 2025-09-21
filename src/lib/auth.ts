@@ -1,37 +1,49 @@
 import { supabase } from './supabase';
-import { mockCurrentUser, mockDeveloperProfile, mockAdminUser } from '../data/mockData';
 
 // Mock authentication for development
 // In production, this would use real Supabase auth
 export const getCurrentUser = async () => {
-  // For now, return mock user based on current route or role switcher
-  const currentPath = window.location.pathname;
-  
-  if (currentPath.startsWith('/admin')) {
-    return {
-      id: 'admin1',
-      email: 'admin@propertyagent.com',
-      user_metadata: {
-        name: 'System Administrator',
-        role: 'admin'
-      }
-    };
-  } else if (currentPath.startsWith('/developer')) {
+  try {
+    // For now, return mock user based on current route or role switcher
+    const currentPath = window.location.pathname;
+    
+    if (currentPath.startsWith('/admin')) {
+      return {
+        id: '1',
+        email: 'admin@propertyagent.com',
+        user_metadata: {
+          name: 'System Administrator',
+          role: 'admin'
+        }
+      };
+    } else if (currentPath.startsWith('/developer')) {
+      return {
+        id: '1',
+        email: 'developer@propertyagent.com',
+        user_metadata: {
+          name: 'Rajesh Sharma',
+          role: 'developer'
+        }
+      };
+    } else {
+      return {
+        id: '1',
+        email: 'agent@propertyagent.com',
+        user_metadata: {
+          name: 'Arjun Mehta',
+          role: 'agent'
+        }
+      };
+    }
+  } catch (error) {
+    console.error('Error getting current user:', error);
+    // Return a default user to prevent undefined errors
     return {
       id: '1',
-      email: 'developer@propertyagent.com',
+      email: 'default@propertyagent.com',
       user_metadata: {
-        name: 'Rajesh Sharma',
+        name: 'Default User',
         role: 'developer'
-      }
-    };
-  } else {
-    return {
-      id: '1',
-      email: 'agent@propertyagent.com',
-      user_metadata: {
-        name: 'Arjun Mehta',
-        role: 'agent'
       }
     };
   }
