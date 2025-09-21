@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, Clock, TrendingUp, Users, CheckCircle, AlertCircle, Bell, Gift, Star } from 'lucide-react';
 import { mockDevelopers, mockProperties } from '../data/mockData';
