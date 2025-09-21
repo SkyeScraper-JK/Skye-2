@@ -1,16 +1,65 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, Clock, TrendingUp, Users, CheckCircle, AlertCircle, Bell, Gift, Star } from 'lucide-react';
-import { mockDevelopers } from '../data/mockData';
+import { mockDevelopers, mockProperties } from '../data/mockData';
 import { mockLeads, mockBookings, mockTodayReminders, mockNotifications, mockPromotions } from '../data/mockData';
 import SearchFilters from '../components/SearchFilters';
 import DeveloperCard from '../components/DeveloperCard';
 import AgentBottomNavigation from '../components/AgentBottomNavigation';
 import RoleBasedLayout from '../components/RoleBasedLayout';
 import { mockCurrentUser } from '../data/mockData';
+import { supabase } from '../lib/supabase';
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
+  const [featuredProjects, setFeaturedProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load featured projects from database
+  React.useEffect(() => {
+    const loadFeaturedProjects = async () => {
+      try {
+        const { data: dbProjects, error } = await supabase
+          .from('projects')
+          .select('*')
+          .limit(6);
+
+        if (error || !dbProjects) {
+          setFeaturedProjects(mockProperties.slice(0, 6));
+        } else {
+          // Transform database projects to property format
+          const transformedProjects = dbProjects.map(dbProject => {
+            const developer = mockDevelopers.find(d => d.id === dbProject.developer_id.toString());
+            return {
+              id: dbProject.id.toString(),
+              name: dbProject.name,
+              developerId: dbProject.developer_id.toString(),
+              developer: developer?.name || 'Unknown Developer',
+              image: 'https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=800',
+              location: dbProject.location,
+              startingPrice: '₹1.2 Cr',
+              possessionDate: 'Dec 2025',
+              propertyType: 'Apartment' as const,
+              bedrooms: '2-4 BHK',
+              bathrooms: '2-3',
+              status: 'Available' as const,
+              highlights: ['Premium Location', 'Modern Amenities', 'Ready to Move']
+            };
+          });
+          
+          // Combine with mock properties for demo
+          setFeaturedProjects([...transformedProjects, ...mockProperties.slice(0, 3)]);
+        }
+      } catch (error) {
+        console.error('Error loading featured projects:', error);
+        setFeaturedProjects(mockProperties.slice(0, 6));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadFeaturedProjects();
+  }, []);
 
   const handleDeveloperClick = (developerId: string) => {
     navigate(`/developer/${developerId}`);
