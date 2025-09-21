@@ -1,28 +1,5 @@
 import { supabase } from './supabase';
 
-// Set mock session for Supabase client to handle RLS policies
-const setMockSession = async (userId: string, email: string, role: string) => {
-  // Create a mock session that Supabase RLS can use
-  const mockSession = {
-    access_token: 'mock-jwt-token',
-    refresh_token: 'mock-refresh-token',
-    expires_in: 3600,
-    token_type: 'bearer',
-    user: {
-      id: userId,
-      email: email,
-      user_metadata: { role },
-      app_metadata: {},
-      aud: 'authenticated',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }
-  };
-
-  // Set the session in Supabase client
-  await supabase.auth.setSession(mockSession);
-};
-
 // Mock authentication for development
 // In production, this would use real Supabase auth
 export const getCurrentUser = async () => {
@@ -52,9 +29,6 @@ export const getCurrentUser = async () => {
       name = 'Arjun Mehta';
     }
 
-    // Set mock session for Supabase RLS
-    await setMockSession(userId, email, role);
-
     return {
       id: userId,
       email: email,
@@ -75,8 +49,6 @@ export const getCurrentUser = async () => {
       }
     };
 
-    // Set mock session for default user
-    await setMockSession(defaultUser.id, defaultUser.email, defaultUser.user_metadata.role);
     return defaultUser;
   }
 };
