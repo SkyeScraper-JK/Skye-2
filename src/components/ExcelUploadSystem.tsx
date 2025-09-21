@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Upload, FileSpreadsheet, FileText, CheckCircle, AlertCircle, X, Download, RefreshCw } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { createProject, CreateProjectData } from '../services/projectService';
+import { getCurrentUser } from '../lib/auth';
 
 interface ExcelUploadSystemProps {
   projectId?: string;
@@ -384,6 +385,12 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
 
       // Create the actual project in the database only if we have valid project form data
       if (projectFormData && developerId) {
+        // Ensure user is authenticated
+        const currentUser = await getCurrentUser();
+        if (!currentUser) {
+          throw new Error('User not authenticated. Please log in and try again.');
+        }
+        
         console.log('Creating project with data:', { projectFormData, developerId, projects });
         
         const projectData: CreateProjectData = {
@@ -396,7 +403,7 @@ const ExcelUploadSystem: React.FC<ExcelUploadSystemProps> = ({
           description: projectFormData.description,
           brochureFile: brochureFile,
           excelFile: excelFile,
-          createdBy: isAdmin ? '1' : undefined // Mock admin ID for now
+          createdBy: isAdmin ? currentUser.id : undefined
         };
 
         const result = await createProject(projectData, projects);
