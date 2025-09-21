@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Building, Shield } from 'lucide-react';
 import { User } from '../types';
+import { setMockSupabaseSession } from '../lib/auth';
 import AgentBottomNavigation from './AgentBottomNavigation';
 import DeveloperBottomNavigation from './DeveloperBottomNavigation';
 import AdminBottomNavigation from './AdminBottomNavigation';
@@ -14,6 +15,24 @@ interface RoleBasedLayoutProps {
 
 const RoleBasedLayout: React.FC<RoleBasedLayoutProps> = ({ user, children, showRoleSwitcher = false }) => {
   const navigate = useNavigate();
+
+  // Set mock Supabase session whenever user changes
+  useEffect(() => {
+    const setupMockSession = async () => {
+      try {
+        await setMockSupabaseSession(
+          user.id.toString(),
+          user.email,
+          user.role,
+          user.name
+        );
+      } catch (error) {
+        console.error('Failed to set mock Supabase session:', error);
+      }
+    };
+
+    setupMockSession();
+  }, [user.id, user.email, user.role, user.name]);
 
   const switchToAgent = () => {
     navigate('/');
